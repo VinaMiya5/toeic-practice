@@ -170,6 +170,12 @@
   </div>
 </div>
 
+<!-- 聲音啟動 banner -->
+<div id="audio-banner" style="background:#1e3a5f;border-bottom:1px solid #3b82f6;padding:10px;text-align:center;display:flex;align-items:center;justify-content:center;gap:12px;">
+  <span style="color:#93c5fd;font-size:15px;">🔇 點擊下方按鈕啟動聲音</span>
+  <button onclick="unlockAudio()" style="padding:8px 20px;background:#3b82f6;border:none;border-radius:8px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;">🔊 啟動聲音</button>
+</div>
+
 <!-- VOCAB PAGE -->
 <div id="vocab" class="page active">
   <div class="two-col">
@@ -197,6 +203,24 @@
 <script>
 let speed = 1.0;
 let activeCard = null, activeExEl = null;
+let audioUnlocked = false;
+
+function unlockAudio() {
+  // 播放一個無聲的utterance來解鎖瀏覽器音訊
+  const u = new SpeechSynthesisUtterance(' ');
+  u.volume = 0;
+  u.onend = () => {
+    audioUnlocked = true;
+    const banner = document.getElementById('audio-banner');
+    if (banner) {
+      banner.style.background = '#0d2420';
+      banner.style.borderColor = '#10b981';
+      banner.innerHTML = '<span style="color:#6ee7b7;font-size:15px;">✅ 聲音已啟動！點擊單字或例句就能聽發音</span>';
+      setTimeout(() => banner.style.display='none', 3000);
+    }
+  };
+  speechSynthesis.speak(u);
+}
 
 // ── DATA ──────────────────────────────────────────────────────
 const vocabData = {
@@ -465,10 +489,19 @@ const grammarData = {
 
 // ── SPEECH ──────────────────────────────────────────────────
 function setSpeed(s, btn) {
-  speed = s;
-  // 只更新 top-bar 裡的速度按鈕
-  document.querySelectorAll('.top-bar .speed-btn').forEach(b => b.classList.remove('active'));
+  speed = parseFloat(s);
+  document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  // 立刻播一個測試音讓使用者確認速度
+  speechSynthesis.cancel();
+  setTimeout(() => {
+    const test = new SpeechSynthesisUtterance('test');
+    test.lang = 'en-US';
+    test.rate = speed;
+    test.pitch = 1.0;
+    test.volume = 1.0;
+    speechSynthesis.speak(test);
+  }, 100);
 }
 function stopAll() {
   speechSynthesis.cancel();
@@ -478,15 +511,20 @@ function stopAll() {
 function speakText(text, onEnd) {
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang='en-US'; u.rate=speed;
-  if (onEnd) u.onend=onEnd;
-  speechSynthesis.speak(u);
+  u.lang = 'en-US';
+  u.rate = parseFloat(speed) || 1.0;
+  u.pitch = 1.0;
+  if (onEnd) u.onend = onEnd;
+  // 短暫延遲讓 cancel() 完全生效再播放
+  setTimeout(() => speechSynthesis.speak(u), 50);
 }
 function speakScript(lines, idx, btn) {
   if (idx>=lines.length) { btn.classList.remove('playing'); btn.textContent='▶ 播放對話'; return; }
   const u = new SpeechSynthesisUtterance(lines[idx].text);
-  u.lang='en-US'; u.rate=speed;
-  u.onend=()=>setTimeout(()=>speakScript(lines,idx+1,btn),400);
+  u.lang = 'en-US';
+  u.rate = parseFloat(speed) || 1.0;
+  u.pitch = 1.0;
+  u.onend = () => setTimeout(() => speakScript(lines, idx+1, btn), 400);
   speechSynthesis.speak(u);
 }
 
