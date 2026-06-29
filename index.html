@@ -356,22 +356,19 @@ function renderVocab(week, day, data) {
     example.innerHTML = `
       <div class="example-en"><span class="ex-speak">▶ 例句</span>${w.ex}</div>
       <div class="example-zh">${w.exZh}</div>`;
-    // 文字區：點一下播放+展開，再點一下收起
+    // 文字區：點一下播放+展開，點其他單字才關閉，不會自己縮起來
     header.querySelector('.word-main').addEventListener('click', e => {
       e.stopPropagation();
-      const isOpen = item.classList.contains('open');
-      if (isOpen) {
-        // 已展開 → 收起
-        item.classList.remove('open');
-        stopAll();
-      } else {
-        // 未展開 → 播放 + 展開
-        document.querySelectorAll('.word-item.open').forEach(el => el.classList.remove('open'));
-        item.classList.add('open');
-        stopAll();
-        item.classList.add('playing-word'); activeCard=item;
-        speakText(w.en,()=>{item.classList.remove('playing-word');activeCard=null;});
-      }
+      // 關閉其他已展開的單字
+      document.querySelectorAll('.word-item.open').forEach(el => {
+        if (el !== item) el.classList.remove('open');
+      });
+      // 展開自己（已展開也保持展開）
+      item.classList.add('open');
+      // 每次點都播放發音
+      stopAll();
+      item.classList.add('playing-word'); activeCard=item;
+      speakText(w.en,()=>{item.classList.remove('playing-word');activeCard=null;});
     });
     // 右側🔊大按鈕：只播放，不影響展開狀態，可重複按
     header.querySelector('.word-play-zone').addEventListener('click', e => {
