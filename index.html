@@ -510,22 +510,28 @@ function stopAll() {
 }
 function speakText(text, onEnd) {
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-US';
-  u.rate = parseFloat(speed) || 1.0;
-  u.pitch = 1.0;
-  if (onEnd) u.onend = onEnd;
-  // 短暫延遲讓 cancel() 完全生效再播放
-  setTimeout(() => speechSynthesis.speak(u), 50);
+  // 延遲 200ms 讓 cancel() 完全生效，避免電腦瀏覽器切頭 bug
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = parseFloat(speed) || 1.0;
+    u.pitch = 1.0;
+    if (onEnd) u.onend = onEnd;
+    speechSynthesis.speak(u);
+  }, 200);
 }
 function speakScript(lines, idx, btn) {
   if (idx>=lines.length) { btn.classList.remove('playing'); btn.textContent='▶ 播放對話'; return; }
-  const u = new SpeechSynthesisUtterance(lines[idx].text);
-  u.lang = 'en-US';
-  u.rate = parseFloat(speed) || 1.0;
-  u.pitch = 1.0;
-  u.onend = () => setTimeout(() => speakScript(lines, idx+1, btn), 400);
-  speechSynthesis.speak(u);
+  // 第一句延遲 150ms（讓 cancel 完全生效），後續句子不需要
+  const delay = idx === 0 ? 150 : 0;
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(lines[idx].text);
+    u.lang = 'en-US';
+    u.rate = parseFloat(speed) || 1.0;
+    u.pitch = 1.0;
+    u.onend = () => setTimeout(() => speakScript(lines, idx+1, btn), 400);
+    speechSynthesis.speak(u);
+  }, delay);
 }
 
 // ── SIDEBAR BUILDER ──────────────────────────────────────────
