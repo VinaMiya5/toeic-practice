@@ -273,6 +273,32 @@ const vocabData = {
         { en:"The staff will respond to all requests.",    zh:"員工將回應所有要求。" },
       ]
     },
+    "第5天｜製造品質": {
+      words: [
+        { en:"agreement",   ph:"/əˈɡriːmənt/",    pos:"n.",    zh:"協議",       ex:"We signed an agreement.",              exZh:"我們簽署了一份協議。" },
+        { en:"permission",  ph:"/pərˈmɪʃən/",     pos:"n.",    zh:"許可",       ex:"You need permission to enter.",        exZh:"你需要許可才能進入。" },
+        { en:"complaint",   ph:"/kəmˈpleɪnt/",    pos:"n.",    zh:"投訴",       ex:"We received a complaint.",             exZh:"我們收到一則投訴。" },
+        { en:"efficient",   ph:"/ɪˈfɪʃənt/",      pos:"adj.",  zh:"有效率的",   ex:"She is very efficient.",               exZh:"她非常有效率。" },
+        { en:"capacity",    ph:"/kəˈpæsɪti/",     pos:"n.",    zh:"容量／產能", ex:"The factory is at full capacity.",      exZh:"工廠已達到滿載產能。" },
+        { en:"manufacture", ph:"/ˌmænjʊˈfæktʃər/",pos:"v./n.",zh:"製造",       ex:"We manufacture car parts.",            exZh:"我們製造汽車零件。" },
+        { en:"quality",     ph:"/ˈkwɒlɪti/",      pos:"n.",    zh:"品質",       ex:"The quality is excellent.",            exZh:"品質非常優良。" },
+        { en:"inspect",     ph:"/ɪnˈspɛkt/",      pos:"v.",    zh:"檢查",       ex:"Please inspect the goods.",            exZh:"請檢查貨物。" },
+        { en:"defect",      ph:"/ˈdiːfɛkt/",      pos:"n.",    zh:"缺陷",       ex:"There is a defect in the product.",    exZh:"這個產品有缺陷。" },
+        { en:"standard",    ph:"/ˈstændərd/",     pos:"n./adj.",zh:"標準",      ex:"This meets our standard.",             exZh:"這符合我們的標準。" },
+        { en:"revision",    ph:"/rɪˈvɪʒən/",      pos:"n.",    zh:"修訂",       ex:"Please make a revision.",              exZh:"請進行修訂。" },
+        { en:"document",    ph:"/ˈdɒkjʊmənt/",    pos:"n.",    zh:"文件",       ex:"Send me the document.",                exZh:"請把文件傳給我。" },
+        { en:"authorize",   ph:"/ˈɔːθəraɪz/",     pos:"v.",    zh:"授權",       ex:"The manager authorized the payment.",  exZh:"經理授權了這筆付款。" },
+        { en:"extension",   ph:"/ɪkˈstɛnʃən/",    pos:"n.",    zh:"延期／分機", ex:"Can I get an extension?",              exZh:"我可以申請延期嗎？" },
+        { en:"negotiate",   ph:"/nɪˈɡoʊʃieɪt/",  pos:"v.",    zh:"協商",       ex:"Let's negotiate the terms.",           exZh:"我們來協商條款。" },
+      ],
+      sentences: [
+        { en:"The manager authorized the payment yesterday.",  zh:"經理昨天授權了這筆付款。" },
+        { en:"We received a complaint from the customer.",     zh:"我們收到了客戶的投訴。" },
+        { en:"The inspector found a defect in the product.",   zh:"檢查員在產品中發現了缺陷。" },
+        { en:"She applied for an extension last week.",        zh:"她上週申請了延期。" },
+        { en:"This product meets our quality standard.",       zh:"這個產品符合我們的品質標準。" },
+      ]
+    },
     "第4天｜採購物流": {
       words: [
         { en:"expense",    ph:"/ɪkˈspɛns/",    pos:"n.",     zh:"費用",         ex:"Please submit your expenses.",         exZh:"請提交您的費用單。" },
@@ -330,6 +356,20 @@ const listeningData = {
         { q:"David 在哪個部門？", opts:["(A) 客服部","(B) 財務部","(C) 銷售部","(D) 物流部"], ans:2, exp:"David 說 'from the sales department'。" },
         { q:"客戶打電話的原因？", opts:["(A) 取消訂單","(B) 訂單未到","(C) 發票錯誤","(D) 更改地址"], ans:1, exp:"客戶說 'I haven't received it yet'，貨還沒到。" },
         { q:"David 何時回覆？", opts:["(A) 中午前","(B) 明天早上","(C) 今天下班前","(D) 一小時內"], ans:2, exp:"David 說 'by end of day'，今天下班前。" },
+      ]
+    },
+    "第4回｜品質檢查": {
+      script: [
+        { speaker:"A", text:"Did you hear about the quality inspection yesterday?" },
+        { speaker:"B", text:"Yes, the inspector found a defect in one of the products." },
+        { speaker:"A", text:"That's not good. Did the manager authorize a revision?" },
+        { speaker:"B", text:"She did. She also extended the deadline by one week." },
+        { speaker:"A", text:"Good. We need to make sure everything meets our standard." },
+      ],
+      questions: [
+        { q:"昨天發生了什麼事？", opts:["(A) 員工開會","(B) 品質檢查","(C) 產品發表","(D) 客戶投訴"], ans:1, exp:"A 說 'quality inspection yesterday'，是品質檢查。" },
+        { q:"檢查員發現了什麼？", opts:["(A) 文件缺少","(B) 倉庫問題","(C) 產品有缺陷","(D) 預算超支"], ans:2, exp:"B 說 'found a defect in one of the products'，產品有缺陷。" },
+        { q:"經理做了哪兩件事？", opts:["(A) 批准修訂＋延長截止日期","(B) 取消訂單＋開會","(C) 授權付款＋招募員工","(D) 更換產品＋退款"], ans:0, exp:"B 說 'authorize a revision' 和 'extended the deadline'，批准修訂並延長截止日期。" },
       ]
     },
     "第3回｜培訓通知": {
@@ -394,6 +434,21 @@ const grammarData = {
           exp:"✏️ right now = 進行式\nThe manager（單數）→ is\nreview 一般加 ing → reviewing\n\n完整：The manager is reviewing = 經理正在審查\n\n💡 right now 是進行式的強烈信號！" },
         { q:"We ___ the meeting until next week.", opts:["(A) postpone","(B) postpones","(C) are postponing","(D) postponed"], ans:2,
           exp:"✏️ We（複數）→ are\npostpone 字尾有 e，去 e 加 ing → postponing\n\n完整：We are postponing = 我們正在延期\n\n💡 進行式也可以表示「已決定要做的近期計畫」\n例：We are postponing the meeting.（我們決定把會議延期）" },
+      ]
+    },
+    "第5回｜動詞過去式ed": {
+      rule: "📌 規則：一般動詞過去式（規則變化）\n動詞原形 + ed\n\n變化規則：\n一般動詞 → 加 ed（work → worked）\n字尾是 e → 只加 d（approve → approved）\n子音＋y → y改i加ed（apply → applied）\n短母音重複字尾 → 重複子音加ed（plan → planned）\n\n常見過去時間關鍵字：\nyesterday（昨天）\nlast week／month／year（上週／月／年）\nago（...之前）\nin + 年份（in 2020）",
+      questions: [
+        { q:"The client ___ the contract last Friday.", opts:["(A) sign","(B) signs","(C) signed","(D) signing"], ans:2,
+          exp:"✏️ last Friday（上週五）= 過去式信號\nsign 一般動詞直接加 ed → signed\n\n完整：The client signed = 客戶簽署了\n\n💡 看到 last、yesterday、ago，馬上想過去式！" },
+        { q:"We ___ a complaint from the customer yesterday.", opts:["(A) receive","(B) receives","(C) receiving","(D) received"], ans:3,
+          exp:"✏️ yesterday（昨天）= 過去式信號\nreceive 字尾有 e，去 e 加 d → received\n\n完整：We received = 我們收到了\n\n💡 receive → received 是多益超高頻單字！" },
+        { q:"The team ___ the new product last month.", opts:["(A) launch","(B) launched","(C) launches","(D) launching"], ans:1,
+          exp:"✏️ last month（上個月）= 過去式信號\nlaunch 字尾是 ch，直接加 ed → launched\n\n完整：The team launched = 團隊發表了\n\n💡 launch a product（發表產品）是多益常見片語！" },
+        { q:"She ___ for an extension two days ago.", opts:["(A) apply","(B) applies","(C) applied","(D) applying"], ans:2,
+          exp:"✏️ two days ago（兩天前）= 過去式信號\napply 是子音(p) + y，y 改 i 加 ed → applied\n\n必背變化：\napply → applied\nstudy → studied\ncarry → carried\n\n💡 子音+y結尾，記得 y→i！" },
+        { q:"The manager ___ the payment this morning.", opts:["(A) authorizes","(B) authorize","(C) authorizing","(D) authorized"], ans:3,
+          exp:"✏️ this morning（今天早上）= 已發生 = 過去式\nauthorize 字尾有 e，去 e 加 d → authorized\n\n完整：The manager authorized = 經理授權了\n\n💡 authorize（授權）是多益商務類必考單字！" },
       ]
     },
     "第4回｜過去式 was／were": {
