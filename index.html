@@ -162,16 +162,16 @@
     <button class="main-tab" onclick="showPage('listening',this)">🎧 聽力測驗</button>
     <button class="main-tab" onclick="showPage('grammar',this)">📝 文法測驗</button>
   </div>
+  <div class="speed-row" style="margin-top:10px;margin-bottom:0;">
+    <span class="speed-label">播放速度：</span>
+    <button class="speed-btn" id="spd-slow" onclick="setSpeed(0.7,this)">慢速</button>
+    <button class="speed-btn active" id="spd-normal" onclick="setSpeed(1.0,this)">正常</button>
+    <button class="speed-btn" id="spd-fast" onclick="setSpeed(1.3,this)">快速</button>
+  </div>
 </div>
 
 <!-- VOCAB PAGE -->
 <div id="vocab" class="page active">
-  <div class="speed-row">
-    <span class="speed-label">播放速度：</span>
-    <button class="speed-btn" onclick="setSpeed(0.7,this)">慢速</button>
-    <button class="speed-btn active" onclick="setSpeed(1.0,this)">正常</button>
-    <button class="speed-btn" onclick="setSpeed(1.3,this)">快速</button>
-  </div>
   <div class="two-col">
     <div class="sidebar" id="vocab-sidebar"></div>
     <div class="main-content" id="vocab-main"></div>
@@ -180,12 +180,6 @@
 
 <!-- LISTENING PAGE -->
 <div id="listening" class="page">
-  <div class="speed-row">
-    <span class="speed-label">播放速度：</span>
-    <button class="speed-btn" onclick="setSpeed(0.7,this)">慢速</button>
-    <button class="speed-btn active" onclick="setSpeed(1.0,this)">正常</button>
-    <button class="speed-btn" onclick="setSpeed(1.3,this)">快速</button>
-  </div>
   <div class="two-col">
     <div class="sidebar" id="listen-sidebar"></div>
     <div class="main-content" id="listen-main"></div>
@@ -273,32 +267,6 @@ const vocabData = {
         { en:"The staff will respond to all requests.",    zh:"員工將回應所有要求。" },
       ]
     },
-    "第5天｜製造品質": {
-      words: [
-        { en:"agreement",   ph:"/əˈɡriːmənt/",    pos:"n.",    zh:"協議",       ex:"We signed an agreement.",              exZh:"我們簽署了一份協議。" },
-        { en:"permission",  ph:"/pərˈmɪʃən/",     pos:"n.",    zh:"許可",       ex:"You need permission to enter.",        exZh:"你需要許可才能進入。" },
-        { en:"complaint",   ph:"/kəmˈpleɪnt/",    pos:"n.",    zh:"投訴",       ex:"We received a complaint.",             exZh:"我們收到一則投訴。" },
-        { en:"efficient",   ph:"/ɪˈfɪʃənt/",      pos:"adj.",  zh:"有效率的",   ex:"She is very efficient.",               exZh:"她非常有效率。" },
-        { en:"capacity",    ph:"/kəˈpæsɪti/",     pos:"n.",    zh:"容量／產能", ex:"The factory is at full capacity.",      exZh:"工廠已達到滿載產能。" },
-        { en:"manufacture", ph:"/ˌmænjʊˈfæktʃər/",pos:"v./n.",zh:"製造",       ex:"We manufacture car parts.",            exZh:"我們製造汽車零件。" },
-        { en:"quality",     ph:"/ˈkwɒlɪti/",      pos:"n.",    zh:"品質",       ex:"The quality is excellent.",            exZh:"品質非常優良。" },
-        { en:"inspect",     ph:"/ɪnˈspɛkt/",      pos:"v.",    zh:"檢查",       ex:"Please inspect the goods.",            exZh:"請檢查貨物。" },
-        { en:"defect",      ph:"/ˈdiːfɛkt/",      pos:"n.",    zh:"缺陷",       ex:"There is a defect in the product.",    exZh:"這個產品有缺陷。" },
-        { en:"standard",    ph:"/ˈstændərd/",     pos:"n./adj.",zh:"標準",      ex:"This meets our standard.",             exZh:"這符合我們的標準。" },
-        { en:"revision",    ph:"/rɪˈvɪʒən/",      pos:"n.",    zh:"修訂",       ex:"Please make a revision.",              exZh:"請進行修訂。" },
-        { en:"document",    ph:"/ˈdɒkjʊmənt/",    pos:"n.",    zh:"文件",       ex:"Send me the document.",                exZh:"請把文件傳給我。" },
-        { en:"authorize",   ph:"/ˈɔːθəraɪz/",     pos:"v.",    zh:"授權",       ex:"The manager authorized the payment.",  exZh:"經理授權了這筆付款。" },
-        { en:"extension",   ph:"/ɪkˈstɛnʃən/",    pos:"n.",    zh:"延期／分機", ex:"Can I get an extension?",              exZh:"我可以申請延期嗎？" },
-        { en:"negotiate",   ph:"/nɪˈɡoʊʃieɪt/",  pos:"v.",    zh:"協商",       ex:"Let's negotiate the terms.",           exZh:"我們來協商條款。" },
-      ],
-      sentences: [
-        { en:"The manager authorized the payment yesterday.",  zh:"經理昨天授權了這筆付款。" },
-        { en:"We received a complaint from the customer.",     zh:"我們收到了客戶的投訴。" },
-        { en:"The inspector found a defect in the product.",   zh:"檢查員在產品中發現了缺陷。" },
-        { en:"She applied for an extension last week.",        zh:"她上週申請了延期。" },
-        { en:"This product meets our quality standard.",       zh:"這個產品符合我們的品質標準。" },
-      ]
-    },
     "第4天｜採購物流": {
       words: [
         { en:"expense",    ph:"/ɪkˈspɛns/",    pos:"n.",     zh:"費用",         ex:"Please submit your expenses.",         exZh:"請提交您的費用單。" },
@@ -326,7 +294,33 @@ const vocabData = {
       ]
     },
   }
-};
+},
+    "第5天｜製造品質": {
+      words: [
+        { en:"agreement",   ph:"/əˈɡriːmənt/",    pos:"n.",    zh:"協議",       ex:"We signed an agreement.",              exZh:"我們簽署了一份協議。" },
+        { en:"permission",  ph:"/pərˈmɪʃən/",     pos:"n.",    zh:"許可",       ex:"You need permission to enter.",        exZh:"你需要許可才能進入。" },
+        { en:"complaint",   ph:"/kəmˈpleɪnt/",    pos:"n.",    zh:"投訴",       ex:"We received a complaint.",             exZh:"我們收到一則投訴。" },
+        { en:"efficient",   ph:"/ɪˈfɪʃənt/",      pos:"adj.",  zh:"有效率的",   ex:"She is very efficient.",               exZh:"她非常有效率。" },
+        { en:"capacity",    ph:"/kəˈpæsɪti/",     pos:"n.",    zh:"容量／產能", ex:"The factory is at full capacity.",      exZh:"工廠已達到滿載產能。" },
+        { en:"manufacture", ph:"/ˌmænjʊˈfæktʃər/",pos:"v./n.",zh:"製造",       ex:"We manufacture car parts.",            exZh:"我們製造汽車零件。" },
+        { en:"quality",     ph:"/ˈkwɒlɪti/",      pos:"n.",    zh:"品質",       ex:"The quality is excellent.",            exZh:"品質非常優良。" },
+        { en:"inspect",     ph:"/ɪnˈspɛkt/",      pos:"v.",    zh:"檢查",       ex:"Please inspect the goods.",            exZh:"請檢查貨物。" },
+        { en:"defect",      ph:"/ˈdiːfɛkt/",      pos:"n.",    zh:"缺陷",       ex:"There is a defect in the product.",    exZh:"這個產品有缺陷。" },
+        { en:"standard",    ph:"/ˈstændərd/",     pos:"n./adj.",zh:"標準",      ex:"This meets our standard.",             exZh:"這符合我們的標準。" },
+        { en:"revision",    ph:"/rɪˈvɪʒən/",      pos:"n.",    zh:"修訂",       ex:"Please make a revision.",              exZh:"請進行修訂。" },
+        { en:"document",    ph:"/ˈdɒkjʊmənt/",    pos:"n.",    zh:"文件",       ex:"Send me the document.",                exZh:"請把文件傳給我。" },
+        { en:"authorize",   ph:"/ˈɔːθəraɪz/",     pos:"v.",    zh:"授權",       ex:"The manager authorized the payment.",  exZh:"經理授權了這筆付款。" },
+        { en:"extension",   ph:"/ɪkˈstɛnʃən/",    pos:"n.",    zh:"延期／分機", ex:"Can I get an extension?",              exZh:"我可以申請延期嗎？" },
+        { en:"negotiate",   ph:"/nɪˈɡoʊʃieɪt/",  pos:"v.",    zh:"協商",       ex:"Let's negotiate the terms.",           exZh:"我們來協商條款。" },
+      ],
+      sentences: [
+        { en:"The manager authorized the payment yesterday.",  zh:"經理昨天授權了這筆付款。" },
+        { en:"We received a complaint from the customer.",     zh:"我們收到了客戶的投訴。" },
+        { en:"The inspector found a defect in the product.",   zh:"檢查員在產品中發現了缺陷。" },
+        { en:"She applied for an extension last week.",        zh:"她上週申請了延期。" },
+        { en:"This product meets our quality standard.",       zh:"這個產品符合我們的品質標準。" },
+      ]
+    },;
 
 const listeningData = {
   "第1週": {
@@ -472,7 +466,8 @@ const grammarData = {
 // ── SPEECH ──────────────────────────────────────────────────
 function setSpeed(s, btn) {
   speed = s;
-  document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+  // 只更新 top-bar 裡的速度按鈕
+  document.querySelectorAll('.top-bar .speed-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
 function stopAll() {
@@ -500,7 +495,9 @@ function buildSidebar(containerId, data, onSelect, type) {
   const sb = document.getElementById(containerId);
   sb.innerHTML = '';
   let firstDay = null;
-  Object.keys(data).forEach((week, wi) => {
+  // 強制排序確保週和天的順序正確
+  const sortedWeeks = Object.keys(data).sort();
+  sortedWeeks.forEach((week, wi) => {
     const sec = document.createElement('div');
     sec.className = 'sb-section';
     const wBtn = document.createElement('div');
@@ -508,7 +505,13 @@ function buildSidebar(containerId, data, onSelect, type) {
     wBtn.innerHTML = `<span>${week}</span><span class="arrow">▼</span>`;
     const days = document.createElement('div');
     days.className = 'sb-days';
-    Object.keys(data[week]).forEach((day, di) => {
+    // 排序天的順序
+    const sortedDays = Object.keys(data[week]).sort((a,b) => {
+      const numA = parseInt(a.match(/\d+/) || [0]);
+      const numB = parseInt(b.match(/\d+/) || [0]);
+      return numA - numB;
+    });
+    sortedDays.forEach((day, di) => {
       const dBtn = document.createElement('div');
       dBtn.className = 'sb-day';
       dBtn.innerHTML = `<span class="dot"></span>${day}`;
