@@ -10,7 +10,7 @@
   body { font-family: 'Inter','Noto Sans TC',sans-serif; background:#0f1117; color:#e8eaf0; min-height:100vh; padding:0 0 60px; font-size:17px; }
 
   /* TOP NAV */
-  .top-bar { background:#0f1117; border-bottom:1px solid #1f2937; padding:16px; text-align:center; position:sticky; top:0; z-index:100; }
+  .top-bar { background:#0f1117; border-bottom:1px solid #1f2937; padding:16px; text-align:center; }
   .top-bar h1 { font-size:22px; font-weight:700; color:#fff; margin-bottom:10px; }
   .main-tabs { display:flex; justify-content:center; gap:6px; flex-wrap:wrap; }
   .main-tab { padding:10px 20px; border-radius:8px; border:1px solid #1f2937; background:#1a1d27; color:#9ca3af; font-size:16px; font-weight:500; cursor:pointer; transition:all 0.15s; }
@@ -57,7 +57,7 @@
   .sb-day.done .dot { background:#10b981; }
 
   /* SPEED */
-  .speed-row { display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .speed-row { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
   .speed-label { font-size:15px; color:#9ca3af; }
   .speed-btn { padding:8px 16px; border-radius:20px; border:1px solid #374151; background:#1a1d27; color:#9ca3af; font-size:15px; cursor:pointer; transition:all 0.15s; }
   .speed-btn.active { background:#1e3a5f; border-color:#3b82f6; color:#60a5fa; font-weight:600; }
@@ -293,8 +293,6 @@ const vocabData = {
         { en:"Please purchase the supplies before Friday.",zh:"請在星期五前購買物資。" },
       ]
     },
-  }
-},
     "第5天｜製造品質": {
       words: [
         { en:"agreement",   ph:"/əˈɡriːmənt/",    pos:"n.",    zh:"協議",       ex:"We signed an agreement.",              exZh:"我們簽署了一份協議。" },
@@ -320,7 +318,9 @@ const vocabData = {
         { en:"She applied for an extension last week.",        zh:"她上週申請了延期。" },
         { en:"This product meets our quality standard.",       zh:"這個產品符合我們的品質標準。" },
       ]
-    },;
+    }
+  }
+};
 
 const listeningData = {
   "第1週": {
