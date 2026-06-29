@@ -1,0 +1,268 @@
+// ╔══════════════════════════════════════════════╗
+// ║  TOEIC 練習資料庫                              ║
+// ║  每天上課後在這裡新增單字、聽力、文法資料        ║
+// ╚══════════════════════════════════════════════╝
+
+const vocabData = {
+  "第1週": {
+    "第1天｜職場基礎": {
+      words: [
+        { en:"meeting",   ph:"/ˈmiːtɪŋ/",   pos:"n.",    zh:"會議",         ex:"We have a meeting at 9 AM.",         exZh:"我們早上9點有個會議。" },
+        { en:"office",    ph:"/ˈɒfɪs/",      pos:"n.",    zh:"辦公室",       ex:"She works in the office.",            exZh:"她在辦公室工作。" },
+        { en:"schedule",  ph:"/ˈskɛdʒuːl/",  pos:"n.",    zh:"行程表",       ex:"Check your schedule.",                exZh:"查看你的行程表。" },
+        { en:"manager",   ph:"/ˈmænɪdʒər/",  pos:"n.",    zh:"經理",         ex:"The manager is busy.",                exZh:"經理很忙。" },
+        { en:"report",    ph:"/rɪˈpɔːrt/",   pos:"n.",    zh:"報告",         ex:"Please send the report.",             exZh:"請傳送報告。" },
+        { en:"customer",  ph:"/ˈkʌstəmər/",  pos:"n.",    zh:"客戶",         ex:"The customer is happy.",              exZh:"客戶很滿意。" },
+        { en:"order",     ph:"/ˈɔːrdər/",    pos:"n./v.", zh:"訂單／訂購",   ex:"We received a new order.",            exZh:"我們收到一筆新訂單。" },
+        { en:"staff",     ph:"/stæf/",        pos:"n.",    zh:"員工（全體）", ex:"All staff must attend.",              exZh:"所有員工都必須出席。" },
+        { en:"available", ph:"/əˈveɪləbl/",  pos:"adj.",  zh:"有空的",       ex:"Are you available tomorrow?",         exZh:"你明天有空嗎？" },
+        { en:"confirm",   ph:"/kənˈfɜːrm/",  pos:"v.",    zh:"確認",         ex:"Please confirm your booking.",        exZh:"請確認你的預約。" },
+      ],
+      sentences: []
+    },
+    "第2天｜職場進階": {
+      words: [
+        { en:"department",ph:"/dɪˈpɑːrtmənt/",pos:"n.",   zh:"部門",         ex:"She works in the sales department.",  exZh:"她在銷售部門工作。" },
+        { en:"deadline",  ph:"/ˈdɛdlaɪn/",   pos:"n.",    zh:"截止日期",     ex:"The deadline is Friday.",             exZh:"截止日期是星期五。" },
+        { en:"invoice",   ph:"/ˈɪnvɔɪs/",    pos:"n.",    zh:"發票／帳單",   ex:"Please send the invoice.",            exZh:"請寄出發票。" },
+        { en:"budget",    ph:"/ˈbʌdʒɪt/",    pos:"n.",    zh:"預算",         ex:"We need to check the budget.",        exZh:"我們需要確認預算。" },
+        { en:"approve",   ph:"/əˈpruːv/",    pos:"v.",    zh:"批准",         ex:"The manager will approve the plan.",  exZh:"經理將批准這個計畫。" },
+        { en:"cancel",    ph:"/ˈkænsəl/",    pos:"v.",    zh:"取消",         ex:"We had to cancel the meeting.",       exZh:"我們不得不取消會議。" },
+        { en:"deliver",   ph:"/dɪˈlɪvər/",   pos:"v.",    zh:"運送／交付",   ex:"They will deliver the package tomorrow.", exZh:"他們明天會送來包裹。" },
+        { en:"request",   ph:"/rɪˈkwɛst/",   pos:"n./v.", zh:"要求／請求",   ex:"I have a request for you.",           exZh:"我有個請求。" },
+        { en:"position",  ph:"/pəˈzɪʃən/",   pos:"n.",    zh:"職位",         ex:"She applied for the position.",       exZh:"她應徵了這個職位。" },
+        { en:"respond",   ph:"/rɪˈspɒnd/",   pos:"v.",    zh:"回應",         ex:"Please respond to the email.",        exZh:"請回覆這封電子郵件。" },
+      ],
+      sentences: []
+    },
+    "第3天｜商務核心": {
+      words: [
+        { en:"contract",    ph:"/ˈkɒntrækt/",    pos:"n.",    zh:"合約",         ex:"Please sign the contract.",            exZh:"請簽署合約。" },
+        { en:"negotiate",   ph:"/nɪˈɡoʊʃieɪt/", pos:"v.",    zh:"協商",         ex:"We need to negotiate the price.",      exZh:"我們需要協商價格。" },
+        { en:"proposal",    ph:"/prəˈpoʊzəl/",   pos:"n.",    zh:"提案",         ex:"She submitted a proposal.",            exZh:"她提交了一份提案。" },
+        { en:"resign",      ph:"/rɪˈzaɪn/",      pos:"v.",    zh:"辭職",         ex:"He decided to resign.",                exZh:"他決定辭職。" },
+        { en:"promote",     ph:"/prəˈmoʊt/",     pos:"v.",    zh:"升遷／促銷",   ex:"She was promoted to manager.",         exZh:"她被升遷為經理。" },
+        { en:"salary",      ph:"/ˈsæləri/",      pos:"n.",    zh:"薪水",         ex:"The salary is very competitive.",      exZh:"薪水非常有競爭力。" },
+        { en:"interview",   ph:"/ˈɪntərvjuː/",  pos:"n./v.", zh:"面試",         ex:"I have an interview tomorrow.",        exZh:"我明天有面試。" },
+        { en:"colleague",   ph:"/ˈkɒliːɡ/",     pos:"n.",    zh:"同事",         ex:"My colleague helped me.",              exZh:"我的同事幫助了我。" },
+        { en:"assign",      ph:"/əˈsaɪn/",       pos:"v.",    zh:"指派",         ex:"The manager will assign the tasks.",   exZh:"經理將指派任務。" },
+        { en:"attend",      ph:"/əˈtɛnd/",       pos:"v.",    zh:"出席",         ex:"Please attend the meeting.",           exZh:"請出席會議。" },
+        { en:"postpone",    ph:"/poʊstˈpoʊn/",  pos:"v.",    zh:"延期",         ex:"We had to postpone the event.",        exZh:"我們不得不延期活動。" },
+        { en:"product",     ph:"/ˈprɒdʌkt/",    pos:"n.",    zh:"產品",         ex:"This product sells very well.",        exZh:"這個產品賣得很好。" },
+        { en:"expand",      ph:"/ɪkˈspænd/",    pos:"v.",    zh:"擴展",         ex:"The company plans to expand.",         exZh:"公司計畫擴展。" },
+        { en:"profit",      ph:"/ˈprɒfɪt/",     pos:"n.",    zh:"利潤",         ex:"Our profit increased this year.",      exZh:"我們今年的利潤增加了。" },
+        { en:"survey",      ph:"/ˈsɜːrveɪ/",    pos:"n./v.", zh:"調查",         ex:"We conducted a customer survey.",      exZh:"我們進行了客戶調查。" },
+        { en:"client",      ph:"/ˈklaɪənt/",    pos:"n.",    zh:"客戶（正式）", ex:"The client signed the contract.",      exZh:"客戶簽署了合約。" },
+        { en:"headquarters",ph:"/ˈhɛdkwɔːrtərz/",pos:"n.", zh:"總部",         ex:"Our headquarters is in Taipei.",       exZh:"我們的總部在台北。" },
+        { en:"annual",      ph:"/ˈænjuəl/",     pos:"adj.",  zh:"每年的",       ex:"This is our annual report.",           exZh:"這是我們的年度報告。" },
+        { en:"replace",     ph:"/rɪˈpleɪs/",    pos:"v.",    zh:"取代／替換",   ex:"We need to replace the equipment.",    exZh:"我們需要更換設備。" },
+        { en:"equipment",   ph:"/ɪˈkwɪpmənt/",  pos:"n.",    zh:"設備",         ex:"The equipment is very expensive.",     exZh:"這個設備非常昂貴。" },
+      ],
+      sentences: [
+        { en:"The manager is reviewing the contract.",    zh:"經理正在審查合約。" },
+        { en:"We need to negotiate the salary.",           zh:"我們需要協商薪水。" },
+        { en:"Please attend the annual meeting.",          zh:"請出席年度會議。" },
+        { en:"She was promoted to a new position.",        zh:"她被升遷到新職位。" },
+        { en:"Our headquarters is expanding this year.",   zh:"我們的總部今年正在擴展。" },
+        { en:"The deadline for the report is Friday.",     zh:"報告的截止日期是星期五。" },
+        { en:"Please confirm your availability.",          zh:"請確認您是否有空。" },
+        { en:"The customer requested a new invoice.",      zh:"客戶要求一張新發票。" },
+        { en:"We had to cancel the delivery.",             zh:"我們不得不取消配送。" },
+        { en:"The staff will respond to all requests.",    zh:"員工將回應所有要求。" },
+      ]
+    },
+    "第4天｜採購物流": {
+      words: [
+        { en:"expense",    ph:"/ɪkˈspɛns/",    pos:"n.",     zh:"費用",         ex:"Please submit your expenses.",         exZh:"請提交您的費用單。" },
+        { en:"refund",     ph:"/ˈriːfʌnd/",    pos:"n./v.",  zh:"退款",         ex:"I'd like to request a refund.",        exZh:"我想申請退款。" },
+        { en:"policy",     ph:"/ˈpɒləsi/",     pos:"n.",     zh:"政策／規定",   ex:"Read the company policy carefully.",   exZh:"請仔細閱讀公司規定。" },
+        { en:"recruit",    ph:"/rɪˈkruːt/",    pos:"v.",     zh:"招募",         ex:"We need to recruit new staff.",        exZh:"我們需要招募新員工。" },
+        { en:"training",   ph:"/ˈtreɪnɪŋ/",   pos:"n.",     zh:"培訓",         ex:"The training starts on Monday.",       exZh:"培訓從星期一開始。" },
+        { en:"branch",     ph:"/brɑːntʃ/",     pos:"n.",     zh:"分公司／分行", ex:"Our branch is in Taichung.",           exZh:"我們的分公司在台中。" },
+        { en:"supply",     ph:"/səˈplaɪ/",     pos:"n./v.",  zh:"供應／供給",   ex:"We supply parts to factories.",        exZh:"我們供應零件給工廠。" },
+        { en:"purchase",   ph:"/ˈpɜːrtʃəs/",  pos:"v./n.",  zh:"購買",         ex:"Please purchase the tickets online.",  exZh:"請在網路上購買票券。" },
+        { en:"freight",    ph:"/freɪt/",        pos:"n.",     zh:"貨運",         ex:"The freight cost is too high.",        exZh:"貨運費用太高了。" },
+        { en:"warehouse",  ph:"/ˈwɛrhaʊs/",   pos:"n.",     zh:"倉庫",         ex:"The goods are in the warehouse.",      exZh:"貨物在倉庫裡。" },
+        { en:"distribute", ph:"/dɪˈstrɪbjuːt/",pos:"v.",    zh:"分發／配送",   ex:"We distribute products nationwide.",   exZh:"我們在全國配送產品。" },
+        { en:"retail",     ph:"/ˈriːteɪl/",   pos:"n./adj.",zh:"零售",         ex:"This is a retail store.",              exZh:"這是一家零售店。" },
+        { en:"wholesale",  ph:"/ˈhoʊlseɪl/",  pos:"n./adj.",zh:"批發",         ex:"We sell products wholesale.",          exZh:"我們批發銷售產品。" },
+        { en:"shipment",   ph:"/ˈʃɪpmənt/",   pos:"n.",     zh:"貨物／出貨",   ex:"The shipment arrived on time.",        exZh:"貨物準時到達。" },
+        { en:"inventory",  ph:"/ˈɪnvəntɔːri/",pos:"n.",    zh:"庫存",         ex:"Check the inventory levels.",          exZh:"請確認庫存水準。" },
+      ],
+      sentences: [
+        { en:"The training session was postponed.",        zh:"培訓課程被延期了。" },
+        { en:"We were not able to meet the deadline.",     zh:"我們無法趕上截止日期。" },
+        { en:"She was promoted to branch manager.",        zh:"她被升遷為分公司經理。" },
+        { en:"The goods were delivered to the warehouse.", zh:"貨物已送達倉庫。" },
+        { en:"Please purchase the supplies before Friday.",zh:"請在星期五前購買物資。" },
+      ]
+    },
+    "第5天｜製造品質": {
+      words: [
+        { en:"agreement",   ph:"/əˈɡriːmənt/",    pos:"n.",    zh:"協議",       ex:"We signed an agreement.",              exZh:"我們簽署了一份協議。" },
+        { en:"permission",  ph:"/pərˈmɪʃən/",     pos:"n.",    zh:"許可",       ex:"You need permission to enter.",        exZh:"你需要許可才能進入。" },
+        { en:"complaint",   ph:"/kəmˈpleɪnt/",    pos:"n.",    zh:"投訴",       ex:"We received a complaint.",             exZh:"我們收到一則投訴。" },
+        { en:"efficient",   ph:"/ɪˈfɪʃənt/",      pos:"adj.",  zh:"有效率的",   ex:"She is very efficient.",               exZh:"她非常有效率。" },
+        { en:"capacity",    ph:"/kəˈpæsɪti/",     pos:"n.",    zh:"容量／產能", ex:"The factory is at full capacity.",      exZh:"工廠已達到滿載產能。" },
+        { en:"manufacture", ph:"/ˌmænjʊˈfæktʃər/",pos:"v./n.",zh:"製造",       ex:"We manufacture car parts.",            exZh:"我們製造汽車零件。" },
+        { en:"quality",     ph:"/ˈkwɒlɪti/",      pos:"n.",    zh:"品質",       ex:"The quality is excellent.",            exZh:"品質非常優良。" },
+        { en:"inspect",     ph:"/ɪnˈspɛkt/",      pos:"v.",    zh:"檢查",       ex:"Please inspect the goods.",            exZh:"請檢查貨物。" },
+        { en:"defect",      ph:"/ˈdiːfɛkt/",      pos:"n.",    zh:"缺陷",       ex:"There is a defect in the product.",    exZh:"這個產品有缺陷。" },
+        { en:"standard",    ph:"/ˈstændərd/",     pos:"n./adj.",zh:"標準",      ex:"This meets our standard.",             exZh:"這符合我們的標準。" },
+        { en:"revision",    ph:"/rɪˈvɪʒən/",      pos:"n.",    zh:"修訂",       ex:"Please make a revision.",              exZh:"請進行修訂。" },
+        { en:"document",    ph:"/ˈdɒkjʊmənt/",    pos:"n.",    zh:"文件",       ex:"Send me the document.",                exZh:"請把文件傳給我。" },
+        { en:"authorize",   ph:"/ˈɔːθəraɪz/",     pos:"v.",    zh:"授權",       ex:"The manager authorized the payment.",  exZh:"經理授權了這筆付款。" },
+        { en:"extension",   ph:"/ɪkˈstɛnʃən/",    pos:"n.",    zh:"延期／分機", ex:"Can I get an extension?",              exZh:"我可以申請延期嗎？" },
+        { en:"negotiate",   ph:"/nɪˈɡoʊʃieɪt/",  pos:"v.",    zh:"協商",       ex:"Let's negotiate the terms.",           exZh:"我們來協商條款。" },
+      ],
+      sentences: [
+        { en:"The manager authorized the payment yesterday.",  zh:"經理昨天授權了這筆付款。" },
+        { en:"We received a complaint from the customer.",     zh:"我們收到了客戶的投訴。" },
+        { en:"The inspector found a defect in the product.",   zh:"檢查員在產品中發現了缺陷。" },
+        { en:"She applied for an extension last week.",        zh:"她上週申請了延期。" },
+        { en:"This product meets our quality standard.",       zh:"這個產品符合我們的品質標準。" },
+      ]
+    }
+  }
+};
+
+const listeningData = {
+  "第1週": {
+    "第1回｜辦公室對話": {
+      script: [
+        { speaker:"A", text:"Hi Sarah, are you coming to the meeting at 3?" },
+        { speaker:"B", text:"Actually, I just got an email. The manager is postponing it to tomorrow." },
+        { speaker:"A", text:"Oh really? Did he say what time?" },
+        { speaker:"B", text:"He's still confirming with the client. He'll respond by noon." },
+        { speaker:"A", text:"OK, I'll check my schedule and let you know if I'm available." },
+      ],
+      questions: [
+        { q:"會議原本幾點開始？", opts:["(A) 12點","(B) 3點","(C) 明天上午","(D) 不知道"], ans:1, exp:"A 說 'coming to the meeting at 3'，所以是下午3點。" },
+        { q:"為什麼會議延期？", opts:["(A) Sarah不能來","(B) 客戶取消了","(C) 經理通知延期","(D) 場地問題"], ans:2, exp:"B 說 'The manager is postponing it'，是經理決定延期。" },
+        { q:"經理什麼時候回覆時間？", opts:["(A) 下午3點","(B) 明天","(C) 中午前","(D) 馬上"], ans:2, exp:"B 說 'He'll respond by noon'，noon = 中午。" },
+      ]
+    },
+    "第2回｜電話訂單": {
+      script: [
+        { speaker:"A", text:"Good morning, this is David from the sales department." },
+        { speaker:"B", text:"Hi David, I'm calling about my order. I requested a delivery for Monday, but I haven't received it yet." },
+        { speaker:"A", text:"I'm sorry about that. Can I get your invoice number?" },
+        { speaker:"B", text:"Sure, it's 4872." },
+        { speaker:"A", text:"Thank you. I'll check with our team and respond to you by end of day." },
+      ],
+      questions: [
+        { q:"David 在哪個部門？", opts:["(A) 客服部","(B) 財務部","(C) 銷售部","(D) 物流部"], ans:2, exp:"David 說 'from the sales department'。" },
+        { q:"客戶打電話的原因？", opts:["(A) 取消訂單","(B) 訂單未到","(C) 發票錯誤","(D) 更改地址"], ans:1, exp:"客戶說 'I haven't received it yet'，貨還沒到。" },
+        { q:"David 何時回覆？", opts:["(A) 中午前","(B) 明天早上","(C) 今天下班前","(D) 一小時內"], ans:2, exp:"David 說 'by end of day'，今天下班前。" },
+      ]
+    },
+    "第4回｜品質檢查": {
+      script: [
+        { speaker:"A", text:"Did you hear about the quality inspection yesterday?" },
+        { speaker:"B", text:"Yes, the inspector found a defect in one of the products." },
+        { speaker:"A", text:"That's not good. Did the manager authorize a revision?" },
+        { speaker:"B", text:"She did. She also extended the deadline by one week." },
+        { speaker:"A", text:"Good. We need to make sure everything meets our standard." },
+      ],
+      questions: [
+        { q:"昨天發生了什麼事？", opts:["(A) 員工開會","(B) 品質檢查","(C) 產品發表","(D) 客戶投訴"], ans:1, exp:"A 說 'quality inspection yesterday'，是品質檢查。" },
+        { q:"檢查員發現了什麼？", opts:["(A) 文件缺少","(B) 倉庫問題","(C) 產品有缺陷","(D) 預算超支"], ans:2, exp:"B 說 'found a defect in one of the products'，產品有缺陷。" },
+        { q:"經理做了哪兩件事？", opts:["(A) 批准修訂＋延長截止日期","(B) 取消訂單＋開會","(C) 授權付款＋招募員工","(D) 更換產品＋退款"], ans:0, exp:"B 說 'authorize a revision' 和 'extended the deadline'，批准修訂並延長截止日期。" },
+      ]
+    },
+    "第3回｜培訓通知": {
+      script: [
+        { speaker:"A", text:"Did you hear? The training session was postponed." },
+        { speaker:"B", text:"Really? When was it rescheduled to?" },
+        { speaker:"A", text:"They weren't sure yet. The manager was waiting for the trainer to confirm." },
+        { speaker:"B", text:"I see. Were all the new recruits informed?" },
+        { speaker:"A", text:"Yes, an email was sent to everyone this morning." },
+      ],
+      questions: [
+        { q:"什麼被延期了？", opts:["(A) 會議","(B) 培訓課程","(C) 面試","(D) 產品發表"], ans:1, exp:"A 說 'The training session was postponed'。" },
+        { q:"為何還不確定新時間？", opts:["(A) 經理忘了","(B) 培訓師未確認","(C) 場地問題","(D) 預算不足"], ans:1, exp:"A 說 'waiting for the trainer to confirm'。" },
+        { q:"新員工如何被通知？", opts:["(A) 電話","(B) 開會","(C) 電子郵件","(D) 公告欄"], ans:2, exp:"A 說 'an email was sent to everyone'。" },
+      ]
+    },
+  }
+};
+
+const grammarData = {
+  "第1週": {
+    "第1回｜Be動詞": {
+      rule: "📌 規則：主詞決定用哪個 be 動詞\nI → am\nHe／She／It／單數名詞 → is\nYou／We／They／複數名詞 → are\n\n💡 口訣：我am、你你們we they are、其他單數is",
+      questions: [
+        { q:"The customer ___ very happy with the service.", opts:["(A) am","(B) is","(C) are","(D) be"], ans:1,
+          exp:"✏️ The customer = 一個客人 = 單數第三人稱，所以用 is。\n\n❌ am 只能用在 I\n❌ are 用在 you／we／they 或複數\n❌ be 是原形，不能單獨當動詞" },
+        { q:"I ___ the new staff member.", opts:["(A) am","(B) is","(C) are","(D) were"], ans:0,
+          exp:"✏️ I 是第一人稱單數，be 動詞永遠用 am，沒有例外。\n\n記法：I am = 我是，這是英文最基本的句型！" },
+        { q:"We ___ not available on Monday.", opts:["(A) am","(B) is","(C) are","(D) be"], ans:2,
+          exp:"✏️ We = 我們 = 複數，be 動詞用 are。\n否定句型：We are not = We aren't（縮寫）\n\n💡 You、We、They 這三個都配 are" },
+        { q:"The reports ___ on the manager's desk.", opts:["(A) am","(B) is","(C) are","(D) was"], ans:2,
+          exp:"✏️ reports = 報告們 = 複數名詞（注意有 s），所以用 are。\n\n單數：The report IS on the desk.\n複數：The reports ARE on the desk.\n\n💡 看到名詞有 s，通常是複數，配 are" },
+        { q:"She ___ in the sales department.", opts:["(A) am","(B) is","(C) are","(D) were"], ans:1,
+          exp:"✏️ She = 她 = 第三人稱單數，用 is。\n\nHe、She、It 這三個都配 is\n\n💡 記法：He is、She is、It is — 都是 is！" },
+      ]
+    },
+    "第2回｜現在式動詞": {
+      rule: "📌 規則：一般動詞現在式\nI／You／We／They → 動詞原形（不加s）\nHe／She／It／單數名詞 → 動詞原形 + s\n\n特殊變化：\nhave → has\ngo → goes\ndo → does\n\n💡 口訣：他她它單數，動詞記得加s",
+      questions: [
+        { q:"The manager ___ the report every Monday.", opts:["(A) review","(B) reviews","(C) reviewing","(D) reviewed"], ans:1,
+          exp:"✏️ The manager = 單數第三人稱，現在式要加 s → reviews\n\nevery Monday（每個星期一）= 習慣動作 = 用現在式\n\n❌ reviewing 是進行式，要配 is reviewing\n❌ reviewed 是過去式" },
+        { q:"We ___ to all customer requests.", opts:["(A) responds","(B) responding","(C) respond","(D) responded"], ans:2,
+          exp:"✏️ We = 複數，動詞不加 s → respond\n\n記法：We respond（我們回應）—— We 後面動詞保持原形\n\n❌ responds 是給 He／She 用的\n❌ responding 要配 are responding" },
+        { q:"He ___ a new position in the company.", opts:["(A) have","(B) has","(C) having","(D) had"], ans:1,
+          exp:"✏️ He = 單數，have 在第三人稱單數要變成 has（特殊變化）\n\n必背：\nI have / You have / We have / They have\nHe has / She has / It has\n\n💡 have 是最常考的特殊變化！" },
+        { q:"They ___ packages to our office every day.", opts:["(A) delivers","(B) delivering","(C) deliver","(D) delivered"], ans:2,
+          exp:"✏️ They = 複數，動詞不加 s → deliver\n\nevery day（每天）= 習慣動作 = 現在式\n\n❌ delivers 是給 He／She 用的\n❌ delivering 要配 are delivering" },
+        { q:"She ___ to work by bus.", opts:["(A) go","(B) going","(C) goes","(D) gone"], ans:2,
+          exp:"✏️ She = 單數，go 的第三人稱變化是 goes（字尾 o 加 es）\n\n字尾加 es 的規則：go→goes、do→does\n一般字尾加 s：work→works、read→reads\n\n💡 記住：She goes to work 是超高頻句型！" },
+      ]
+    },
+    "第3回｜現在進行式": {
+      rule: "📌 規則：現在進行式 = 正在做某事\n句型：主詞 + am／is／are + 動詞ing\n\n常見關鍵字：\nnow、right now（現在）\ncurrently（目前）\nat the moment（此刻）\n\n動詞加ing注意：\n一般：work → working\n字尾e去掉：write → writing\n短母音重複字尾：sit → sitting",
+      questions: [
+        { q:"She ___ the annual report right now.", opts:["(A) write","(B) writes","(C) is writing","(D) written"], ans:2,
+          exp:"✏️ right now = 正在進行 → 用進行式\nShe（單數）→ is\nwrite 字尾有 e，去 e 加 ing → writing\n\n完整句型：She is writing = 她正在寫\n\n💡 看到 right now / now，優先想進行式！" },
+        { q:"They ___ the salary with the client.", opts:["(A) negotiate","(B) are negotiating","(C) negotiates","(D) negotiated"], ans:1,
+          exp:"✏️ They（複數）→ are\nnegotiate 字尾有 e，去 e 加 ing → negotiating\n\n完整：They are negotiating = 他們正在協商\n\n❌ negotiate 是現在式原形（They negotiate 也對，但沒有進行中的意味）\n❌ negotiates 是給 He／She 的現在式" },
+        { q:"I ___ for the interview.", opts:["(A) am preparing","(B) is preparing","(C) prepare","(D) prepared"], ans:0,
+          exp:"✏️ I（第一人稱）→ am\nprepare 字尾有 e，去 e 加 ing → preparing\n\n完整：I am preparing = 我正在準備\n\n⚠️ 注意：am preparing（進行式）= 我正在準備\n vs. am prepared（被動）= 我已準備好了\n意思不同，多益常考！" },
+        { q:"The manager ___ the contract right now.", opts:["(A) review","(B) reviews","(C) is reviewing","(D) reviewed"], ans:2,
+          exp:"✏️ right now = 進行式\nThe manager（單數）→ is\nreview 一般加 ing → reviewing\n\n完整：The manager is reviewing = 經理正在審查\n\n💡 right now 是進行式的強烈信號！" },
+        { q:"We ___ the meeting until next week.", opts:["(A) postpone","(B) postpones","(C) are postponing","(D) postponed"], ans:2,
+          exp:"✏️ We（複數）→ are\npostpone 字尾有 e，去 e 加 ing → postponing\n\n完整：We are postponing = 我們正在延期\n\n💡 進行式也可以表示「已決定要做的近期計畫」\n例：We are postponing the meeting.（我們決定把會議延期）" },
+      ]
+    },
+    "第5回｜動詞過去式ed": {
+      rule: "📌 規則：一般動詞過去式（規則變化）\n動詞原形 + ed\n\n變化規則：\n一般動詞 → 加 ed（work → worked）\n字尾是 e → 只加 d（approve → approved）\n子音＋y → y改i加ed（apply → applied）\n短母音重複字尾 → 重複子音加ed（plan → planned）\n\n常見過去時間關鍵字：\nyesterday（昨天）\nlast week／month／year（上週／月／年）\nago（...之前）\nin + 年份（in 2020）",
+      questions: [
+        { q:"The client ___ the contract last Friday.", opts:["(A) sign","(B) signs","(C) signed","(D) signing"], ans:2,
+          exp:"✏️ last Friday（上週五）= 過去式信號\nsign 一般動詞直接加 ed → signed\n\n完整：The client signed = 客戶簽署了\n\n💡 看到 last、yesterday、ago，馬上想過去式！" },
+        { q:"We ___ a complaint from the customer yesterday.", opts:["(A) receive","(B) receives","(C) receiving","(D) received"], ans:3,
+          exp:"✏️ yesterday（昨天）= 過去式信號\nreceive 字尾有 e，去 e 加 d → received\n\n完整：We received = 我們收到了\n\n💡 receive → received 是多益超高頻單字！" },
+        { q:"The team ___ the new product last month.", opts:["(A) launch","(B) launched","(C) launches","(D) launching"], ans:1,
+          exp:"✏️ last month（上個月）= 過去式信號\nlaunch 字尾是 ch，直接加 ed → launched\n\n完整：The team launched = 團隊發表了\n\n💡 launch a product（發表產品）是多益常見片語！" },
+        { q:"She ___ for an extension two days ago.", opts:["(A) apply","(B) applies","(C) applied","(D) applying"], ans:2,
+          exp:"✏️ two days ago（兩天前）= 過去式信號\napply 是子音(p) + y，y 改 i 加 ed → applied\n\n必背變化：\napply → applied\nstudy → studied\ncarry → carried\n\n💡 子音+y結尾，記得 y→i！" },
+        { q:"The manager ___ the payment this morning.", opts:["(A) authorizes","(B) authorize","(C) authorizing","(D) authorized"], ans:3,
+          exp:"✏️ this morning（今天早上）= 已發生 = 過去式\nauthorize 字尾有 e，去 e 加 d → authorized\n\n完整：The manager authorized = 經理授權了\n\n💡 authorize（授權）是多益商務類必考單字！" },
+      ]
+    },
+    "第4回｜過去式 was／were": {
+      rule: "📌 規則：be 動詞的過去式\nI／He／She／It／單數名詞 → was\nYou／We／They／複數名詞 → were\n\n常見關鍵字（表示過去）：\nyesterday（昨天）\nlast week／month／year（上週／月／年）\nago（...前）\n\n否定：was not = wasn't / were not = weren't",
+      questions: [
+        { q:"The manager ___ in a meeting all morning.", opts:["(A) is","(B) are","(C) was","(D) were"], ans:2,
+          exp:"✏️ The manager = 單數第三人稱\n過去式單數 → was\n\nall morning（整個早上）暗示是過去的事\n\n現在：The manager IS in a meeting.\n過去：The manager WAS in a meeting.\n\n💡 is 的過去式 = was，記住這對！" },
+        { q:"We ___ not able to meet the deadline.", opts:["(A) is","(B) am","(C) was","(D) were"], ans:3,
+          exp:"✏️ We = 複數\n過去式複數 → were\n否定：were not able = weren't able（無法）\n\n比較：\n現在：We ARE not able to...\n過去：We WERE not able to...\n\n💡 meet the deadline = 趕上截止日期，多益超常考片語！" },
+        { q:"I ___ surprised by the new policy.", opts:["(A) were","(B) was","(C) am","(D) are"], ans:1,
+          exp:"✏️ I = 第一人稱單數\n過去式 → was（不是 were！）\n\n⚠️ 注意：were 的範圍是 you／we／they，不包括 I\nI was（過去）/ I am（現在）\n\n句型：I was surprised by... = 我對...感到驚訝（被動語態）" },
+        { q:"The packages ___ delivered yesterday.", opts:["(A) is","(B) are","(C) was","(D) were"], ans:3,
+          exp:"✏️ packages = 包裹們 = 複數（有 s）\n過去式複數 → were\nyesterday（昨天）= 過去式信號\n\n完整：The packages were delivered = 包裹被送達了（被動語態）\n\n💡 delivered yesterday 是多益物流類題目超常見的句型！" },
+        { q:"She ___ promoted to branch manager last year.", opts:["(A) is","(B) are","(C) was","(D) were"], ans:2,
+          exp:"✏️ She = 單數第三人稱\n過去式單數 → was\nlast year（去年）= 過去式信號\n\n完整：She was promoted = 她被升遷了（被動語態）\n\n💡 was／were + 動詞過去分詞 = 被動語態，多益超常考！\n例：was promoted（被升遷）、were delivered（被送達）" },
+      ]
+    },
+  }
+};
