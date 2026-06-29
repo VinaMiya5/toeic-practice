@@ -184,6 +184,7 @@
     <button class="main-tab active" onclick="showPage('vocab',this)">📚 單字發音</button>
     <button class="main-tab" onclick="showPage('listening',this)">🎧 聽力測驗</button>
     <button class="main-tab" onclick="showPage('grammar',this)">📝 文法測驗</button>
+    <button class="main-tab" onclick="showPage('reading',this)">📖 閱讀測驗</button>
   </div>
   <div class="speed-row" style="margin-top:10px;margin-bottom:0;">
     <span class="speed-label">播放速度：</span>
@@ -206,6 +207,14 @@
   <div class="two-col">
     <div class="sidebar" id="listen-sidebar"></div>
     <div class="main-content" id="listen-main"></div>
+  </div>
+</div>
+
+<!-- READING PAGE -->
+<div id="reading" class="page">
+  <div class="two-col">
+    <div class="sidebar" id="reading-sidebar"></div>
+    <div class="main-content" id="reading-main"></div>
   </div>
 </div>
 
@@ -494,6 +503,71 @@ function renderListening(week, day, data) {
   });
 }
 
+// ── READING ──────────────────────────────────────────────────
+const readingAnswers = {};
+function renderReading(week, day, data) {
+  const main = document.getElementById('reading-main');
+  main.innerHTML = `<p class="sec-label">${week} · ${day}</p>`;
+  const key = week + day;
+
+  // 文章區塊
+  const articleBox = document.createElement('div');
+  articleBox.style.cssText = 'background:#1a1d27;border:1px solid #2563eb;border-radius:14px;padding:20px;margin-bottom:16px;';
+  articleBox.innerHTML = `
+    <div style="font-size:13px;color:#60a5fa;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">
+      📄 ${data.type} &nbsp;·&nbsp; ${data.title}
+    </div>
+    <div style="font-size:16px;color:#e2e8f0;line-height:2.0;white-space:pre-line;">${data.article}</div>`;
+  main.appendChild(articleBox);
+
+  // 題目
+  const qLabel = document.createElement('p');
+  qLabel.className = 'sec-label';
+  qLabel.style.marginTop = '8px';
+  qLabel.textContent = '閱讀理解題';
+  main.appendChild(qLabel);
+
+  data.questions.forEach((q, qi) => {
+    const box = document.createElement('div');
+    box.className = 'quiz-box';
+    const fb = document.createElement('div');
+    fb.className = 'quiz-feedback';
+    box.innerHTML = `<div class="quiz-num">題目 ${qi + 1}</div><div class="quiz-q">${q.q}</div>`;
+    const opts = document.createElement('div');
+    opts.className = 'options';
+    q.opts.forEach((o, oi) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.textContent = o;
+      const aKey = key + '-' + qi;
+      if (readingAnswers[aKey] !== undefined) {
+        btn.disabled = true;
+        if (oi === q.ans) btn.classList.add('correct');
+        else if (oi === readingAnswers[aKey]) btn.classList.add('wrong');
+      }
+      btn.addEventListener('click', () => {
+        if (readingAnswers[aKey] !== undefined) return;
+        readingAnswers[aKey] = oi;
+        opts.querySelectorAll('.opt').forEach((b, i) => {
+          b.disabled = true;
+          if (i === q.ans) b.classList.add('correct');
+          else if (i === oi) b.classList.add('wrong');
+        });
+        fb.className = 'quiz-feedback show ' + (oi === q.ans ? 'ok' : 'bad');
+        fb.innerHTML = (oi === q.ans ? '✅ 答對了！<br><br>' : '❌ 答錯了。<br><br>') + q.exp.replace(/\n/g, '<br>');
+      });
+      if (readingAnswers[aKey] !== undefined) {
+        fb.className = 'quiz-feedback show ' + (readingAnswers[aKey] === q.ans ? 'ok' : 'bad');
+        fb.innerHTML = (readingAnswers[aKey] === q.ans ? '✅ 答對了！<br><br>' : '❌ 答錯了。<br><br>') + q.exp.replace(/\n/g, '<br>');
+      }
+      opts.appendChild(btn);
+    });
+    box.appendChild(opts);
+    box.appendChild(fb);
+    main.appendChild(box);
+  });
+}
+
 // ── GRAMMAR ─────────────────────────────────────────────────
 const grammarAnswers = {};
 function renderGrammar(week, day, data) {
@@ -546,6 +620,7 @@ function showPage(id, btn) {
 buildSidebar('vocab-sidebar',   vocabData,    renderVocab,     'v');
 buildSidebar('listen-sidebar',  listeningData, renderListening, 'l');
 buildSidebar('grammar-sidebar', grammarData,   renderGrammar,   'g');
+buildSidebar('reading-sidebar', readingData,   renderReading,   'r');
 startSilentAudioStream(); // 保持音訊通道開啟
 </script>
 <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">▲</button>

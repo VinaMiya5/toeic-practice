@@ -266,3 +266,158 @@ const grammarData = {
     },
   }
 };
+
+
+// ── 閱讀測驗資料 ──────────────────────────────────────────────
+const readingData = {
+  "第1週": {
+    "第1回｜Email通知": {
+      type: "📧 Email",
+      title: "會議延期通知",
+      article: `To: All Staff
+From: Manager Kevin Chen
+Subject: Meeting Reschedule
+
+Dear Team,
+
+I am writing to inform you that the weekly staff meeting originally scheduled for Monday, June 3rd at 3:00 PM has been postponed.
+
+The new meeting will be held on Tuesday, June 4th at 10:00 AM in Conference Room B. The agenda will remain the same.
+
+Please confirm your attendance by replying to this email before 5:00 PM today. If you are unable to attend, please notify your supervisor in advance.
+
+We apologize for any inconvenience this may cause.
+
+Best regards,
+Kevin Chen
+Sales Manager`,
+      questions: [
+        {
+          q: "這封 email 的主要目的是什麼？",
+          opts: ["(A) 宣布新員工加入", "(B) 通知會議時間更改", "(C) 邀請客戶參加活動", "(D) 說明新公司政策"],
+          ans: 1,
+          exp: "Subject 寫 ’Meeting Reschedule’，內文說 ’the weekly staff meeting has been postponed’，主要目的是通知會議延期。"
+        },
+        {
+          q: "新的會議時間是什麼時候？",
+          opts: ["(A) 週一下午3點", "(B) 週二上午10點", "(C) 週三下午3點", "(D) 週四上午10點"],
+          ans: 1,
+          exp: "’The new meeting will be held on Tuesday, June 4th at 10:00 AM’，是週二上午10點。\n\n💡 多益閱讀常考「新舊資訊對比」，原本是週一3點，新的是週二10點！"
+        },
+        {
+          q: "員工需要在什麼時候前回覆確認出席？",
+          opts: ["(A) 週一早上", "(B) 今天下午5點", "(C) 週二上午10點前", "(D) 不需要回覆"],
+          ans: 1,
+          exp: "’Please confirm your attendance by replying to this email before 5:00 PM today’，要在今天下午5點前回覆。\n\n💡 by = 在...之前，是多益高頻介系詞！"
+        },
+        {
+          q: "Kevin Chen 的職稱是什麼？",
+          opts: ["(A) HR Manager", "(B) CEO", "(C) Sales Manager", "(D) Conference Coordinator"],
+          ans: 2,
+          exp: "email 最後署名 ’Kevin Chen, Sales Manager’，職稱是業務經理。\n\n💡 多益常考從簽名或抬頭找人物資訊！"
+        },
+      ]
+    },
+    "第2回｜公告通知": {
+      type: "📋 公告",
+      title: "辦公室裝修通知",
+      article: `OFFICE RENOVATION NOTICE
+
+To: All Employees
+Date: June 1
+
+Please be informed that the 3rd floor office will undergo renovation from June 10 to June 20.
+
+During this period:
+• All staff on the 3rd floor will be temporarily relocated to the 5th floor.
+• The elevator will be reserved for moving equipment between 8:00 AM and 10:00 AM daily.
+• Parking spaces B1 and B2 will be unavailable due to construction vehicles.
+
+Employees are encouraged to use public transportation during the renovation period. A shuttle bus will be available from the main train station every 30 minutes starting June 10.
+
+For any questions, please contact the Facilities Department at ext. 2201.
+
+Thank you for your cooperation.`,
+      questions: [
+        {
+          q: "裝修工程將進行多少天？",
+          opts: ["(A) 5天", "(B) 10天", "(C) 11天", "(D) 20天"],
+          ans: 2,
+          exp: "’from June 10 to June 20’ = 6/10、11、12...20，共11天。\n\n💡 多益常考計算天數，from A to B 包含首尾兩天！"
+        },
+        {
+          q: "3樓員工裝修期間要去哪裡辦公？",
+          opts: ["(A) 1樓", "(B) 2樓", "(C) 4樓", "(D) 5樓"],
+          ans: 3,
+          exp: "’All staff on the 3rd floor will be temporarily relocated to the 5th floor’，搬到5樓。\n\n💡 temporarily = 暫時地，多益常考副詞！"
+        },
+        {
+          q: "電梯在什麼時間會被保留使用？",
+          opts: ["(A) 整天", "(B) 上午8點到10點", "(C) 下午2點到4點", "(D) 不限時間"],
+          ans: 1,
+          exp: "’The elevator will be reserved for moving equipment between 8:00 AM and 10:00 AM daily’，每天早上8點到10點。"
+        },
+        {
+          q: "如果有問題要聯絡哪個部門？",
+          opts: ["(A) HR 部門", "(B) Sales 部門", "(C) Facilities 部門", "(D) IT 部門"],
+          ans: 2,
+          exp: "’please contact the Facilities Department at ext. 2201’，聯絡設施部門。\n\n💡 ext. = extension = 電話分機號碼，多益常考！"
+        },
+      ]
+    },
+    "第3回｜廣告文宣": {
+      type: "📢 廣告",
+      title: "職缺招募廣告",
+      article: `JOB OPENING — Sales Representative
+
+Company: TechVision Inc.
+Location: Taipei, Taiwan
+Type: Full-time
+
+About the Role:
+We are looking for an enthusiastic Sales Representative to join our growing team. The successful candidate will be responsible for managing client accounts, developing new business opportunities, and achieving monthly sales targets.
+
+Requirements:
+• Bachelor's degree in Business or related field
+• Minimum 2 years of sales experience
+• Excellent communication skills in English and Mandarin
+• Proficiency in Microsoft Office
+• Valid driver's license preferred
+
+We Offer:
+• Competitive salary (NT$45,000–60,000/month)
+• Annual performance bonus
+• Health insurance and meal allowance
+• 15 days of paid annual leave
+
+To apply, please send your resume and cover letter to: hr@techvision.com.tw
+Application deadline: June 30`,
+      questions: [
+        {
+          q: "這個職位的工作地點在哪裡？",
+          opts: ["(A) 東京", "(B) 台北", "(C) 香港", "(D) 新加坡"],
+          ans: 1,
+          exp: "’Location: Taipei, Taiwan’，工作地點在台北。"
+        },
+        {
+          q: "應徵者最少需要幾年的銷售經驗？",
+          opts: ["(A) 1年", "(B) 2年", "(C) 3年", "(D) 5年"],
+          ans: 1,
+          exp: "’Minimum 2 years of sales experience’，最少需要2年銷售經驗。\n\n💡 minimum = 最少，maximum = 最多，多益常考！"
+        },
+        {
+          q: "下列哪項福利沒有在廣告中提到？",
+          opts: ["(A) 年度績效獎金", "(B) 健康保險", "(C) 免費停車", "(D) 15天有薪假"],
+          ans: 2,
+          exp: "廣告提到：Annual performance bonus、Health insurance、Meal allowance、15 days paid leave。\n沒有提到免費停車（Free parking）。\n\n💡 多益常考「NOT mentioned」題型，要仔細比對！"
+        },
+        {
+          q: "申請截止日期是什麼時候？",
+          opts: ["(A) 6月1日", "(B) 6月10日", "(C) 6月20日", "(D) 6月30日"],
+          ans: 3,
+          exp: "’Application deadline: June 30’，截止日期是6月30日。\n\n💡 deadline = 截止日期，這是多益必考單字！"
+        },
+      ]
+    },
+  }
+};
