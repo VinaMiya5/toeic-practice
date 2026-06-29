@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多益練習工具</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter','Noto Sans TC',sans-serif; background:#0f1117; color:#e8eaf0; min-height:100vh; padding:0 0 60px; font-size:17px; }
+
+  /* TOP NAV */
+  .top-bar { background:#0f1117; border-bottom:1px solid #1f2937; padding:16px; text-align:center; position:sticky; top:0; z-index:100; }
+  .top-bar h1 { font-size:22px; font-weight:700; color:#fff; margin-bottom:10px; }
+  .main-tabs { display:flex; justify-content:center; gap:6px; flex-wrap:wrap; }
+  .main-tab { padding:10px 20px; border-radius:8px; border:1px solid #1f2937; background:#1a1d27; color:#9ca3af; font-size:16px; font-weight:500; cursor:pointer; transition:all 0.15s; }
+  .main-tab.active { background:#3b82f6; border-color:#3b82f6; color:#fff; }
+
+  .page { display:none; padding:16px; }
+  .page.active { display:block; }
+
+  /* SIDEBAR LAYOUT */
+  .two-col { display:flex; gap:16px; align-items:flex-start; }
+  .sidebar {
+    width:180px; min-width:160px; background:#1a1d27;
+    border:1px solid #1f2937; border-radius:12px;
+    padding:12px 8px; position:sticky; top:90px;
+    max-height: calc(100vh - 110px); overflow-y:auto;
+  }
+  .sidebar::-webkit-scrollbar { width:4px; }
+  .sidebar::-webkit-scrollbar-thumb { background:#374151; border-radius:4px; }
+  .main-content { flex:1; min-width:0; }
+
+  /* SIDEBAR MENU */
+  .sb-section { margin-bottom:12px; }
+  .sb-week {
+    font-size:14px; font-weight:700; color:#6b7280;
+    letter-spacing:1px; text-transform:uppercase;
+    padding:4px 8px; margin-bottom:4px; cursor:pointer;
+    display:flex; align-items:center; justify-content:space-between;
+    border-radius:6px; transition:background 0.15s;
+  }
+  .sb-week:hover { background:#1f2937; }
+  .sb-week .arrow { font-size:9px; transition:transform 0.2s; }
+  .sb-week.open .arrow { transform:rotate(180deg); }
+  .sb-days { display:none; }
+  .sb-week.open + .sb-days { display:block; }
+  .sb-day {
+    font-size:14px; color:#6b7280; padding:5px 8px 5px 16px;
+    cursor:pointer; border-radius:6px; transition:all 0.15s;
+    display:flex; align-items:center; gap:6px;
+  }
+  .sb-day:hover { background:#1f2937; color:#9ca3af; }
+  .sb-day.active { background:#1e3a5f; color:#60a5fa; font-weight:600; }
+  .sb-day .dot { width:6px; height:6px; border-radius:50%; background:#374151; flex-shrink:0; }
+  .sb-day.active .dot { background:#3b82f6; }
+  .sb-day.done .dot { background:#10b981; }
+
+  /* SPEED */
+  .speed-row { display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .speed-label { font-size:15px; color:#9ca3af; }
+  .speed-btn { padding:8px 16px; border-radius:20px; border:1px solid #374151; background:#1a1d27; color:#9ca3af; font-size:15px; cursor:pointer; transition:all 0.15s; }
+  .speed-btn.active { background:#1e3a5f; border-color:#3b82f6; color:#60a5fa; font-weight:600; }
+
+  /* WORD CARDS */
+  .sec-label { font-size:14px; font-weight:700; color:#6b7280; letter-spacing:1px; text-transform:uppercase; margin-bottom:16px; }
+  .word-list { display:flex; flex-direction:column; gap:8px; }
+  .word-item { background:#1a1d27; border:1px solid #1f2937; border-radius:12px; overflow:hidden; transition:border-color 0.15s; }
+  .word-item.open { border-color:#3b82f6; }
+  .word-item.playing-word { border-color:#10b981; }
+  .word-header { display:flex; align-items:stretch; gap:0; padding:0; user-select:none; overflow:hidden; }
+  .word-header:hover { background:#1e2433; }
+  /* 文字區：點一下播放+展開，點兩下收起 */
+  .word-main { flex:1; min-width:0; padding:16px 14px; cursor:pointer; }
+  .word-en { font-size:24px; font-weight:700; color:#f3f4f6; margin-bottom:4px; }
+  .word-phonetic { font-size:14px; color:#6366f1; margin:4px 0; font-style:italic; }
+  .word-meta { font-size:15px; color:#6b7280; margin-top:2px; }
+  .word-pos { font-style:italic; color:#4b5563; margin-right:6px; }
+  /* 播放區在右（大按鈕，右撇子好按） */
+  .word-play-zone { display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; border-left:1px solid #1f2937; }
+  .speak-btn { width:72px; height:80px; min-width:72px; border-radius:0 12px 12px 0; background:#1f2937; display:flex; align-items:center; justify-content:center; font-size:26px; cursor:pointer; border:none; color:#9ca3af; transition:background 0.15s; }
+  .speak-btn:hover { background:#374151; }
+  .word-item.playing-word .speak-btn { background:#10b981; color:#fff; }
+  .word-example { display:none; padding:14px 16px 18px 20px; border-top:1px solid #1f2937; }
+  .word-item.open .word-example { display:block; }
+  .example-en { font-size:15px; color:#d1d5db; margin-bottom:8px; line-height:1.7; cursor:pointer; display:flex; align-items:center; gap:10px; }
+  .example-en:hover { color:#60a5fa; }
+  .example-en.playing-ex { color:#10b981; }
+  .ex-speak { font-size:13px; background:#1f2937; border-radius:10px; padding:5px 12px; color:#6b7280; white-space:nowrap; flex-shrink:0; }
+  .example-en.playing-ex .ex-speak { background:#10b981; color:#fff; }
+  .example-zh { font-size:14px; color:#4b5563; line-height:1.5; }
+
+  /* SENTENCES */
+  .play-all-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:#1e3a5f; border:1px solid #3b82f6; border-radius:10px; color:#60a5fa; font-size:16px; font-weight:600; cursor:pointer; margin-bottom:14px; transition:all 0.15s; }
+  .play-all-btn:hover { background:#1d4ed8; color:#fff; }
+  .sentence-list { display:flex; flex-direction:column; gap:8px; }
+  .sentence-card { background:#1a1d27; border:1px solid #1f2937; border-radius:12px; padding:12px 14px; cursor:pointer; transition:all 0.15s; display:flex; align-items:flex-start; gap:10px; position:relative; overflow:hidden; }
+  .sentence-card:hover { border-color:#3b82f6; background:#1e2433; }
+  .sentence-card.playing { border-color:#10b981; background:#0d2420; }
+  .sentence-card.playing::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:#10b981; animation:prog 2s ease-in-out infinite; }
+  @keyframes prog { 0%{transform:scaleX(0);transform-origin:left} 50%{transform:scaleX(1);transform-origin:left} 100%{transform:scaleX(0);transform-origin:right} }
+  .s-play-btn { width:40px; height:40px; min-width:40px; background:#1f2937; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; color:#9ca3af; }
+  .sentence-card.playing .s-play-btn { background:#10b981; color:#fff; }
+  .s-en { font-size:17px; color:#e8eaf0; font-weight:500; margin-bottom:4px; line-height:1.5; }
+  .s-zh { font-size:15px; color:#6b7280; }
+
+  /* QUIZ */
+  .quiz-box { background:#1a1d27; border:1px solid #1f2937; border-radius:14px; padding:16px; margin-bottom:12px; }
+  .quiz-num { font-size:14px; color:#6b7280; margin-bottom:8px; font-weight:600; letter-spacing:1px; }
+  .quiz-q { font-size:18px; color:#f3f4f6; font-weight:600; margin-bottom:16px; line-height:1.6; }
+  .quiz-q .blank { color:#60a5fa; border-bottom:2px solid #3b82f6; padding:0 5px; }
+  .options { display:flex; flex-direction:column; gap:7px; }
+  .opt { padding:13px 16px; border-radius:10px; border:1px solid #2d3748; background:#0f1117; color:#d1d5db; font-size:16px; cursor:pointer; transition:all 0.15s; text-align:left; }
+  .opt:hover:not(:disabled) { border-color:#3b82f6; background:#1e2433; color:#fff; }
+  .opt.correct { border-color:#10b981; background:#0d2420; color:#10b981; font-weight:600; }
+  .opt.wrong { border-color:#ef4444; background:#2d1212; color:#ef4444; }
+  .opt:disabled { cursor:default; }
+  .quiz-feedback { margin-top:12px; padding:14px 16px; border-radius:10px; font-size:15px; line-height:1.7; display:none; }
+  .quiz-feedback.show { display:block; }
+  .quiz-feedback.ok { background:#0d2420; color:#6ee7b7; border:1px solid #10b981; }
+  .quiz-feedback.bad { background:#2d1212; color:#fca5a5; border:1px solid #ef4444; }
+  .quiz-score { text-align:center; padding:20px; background:#1a1d27; border:1px solid #1f2937; border-radius:14px; margin-bottom:12px; display:none; }
+  .score-num { font-size:40px; font-weight:700; color:#60a5fa; }
+  .score-label { font-size:16px; color:#6b7280; margin-top:6px; }
+  .retry-btn { margin-top:14px; padding:12px 28px; background:#3b82f6; border:none; border-radius:10px; color:#fff; font-size:16px; font-weight:600; cursor:pointer; }
+
+  /* LISTENING */
+  .listen-box { background:#1a1d27; border:1px solid #2563eb; border-radius:14px; padding:16px; margin-bottom:14px; }
+  .listen-title { font-size:14px; color:#60a5fa; font-weight:700; letter-spacing:1px; margin-bottom:10px; text-transform:uppercase; }
+  .listen-play-btn { display:flex; align-items:center; gap:8px; padding:12px 18px; background:#1e3a5f; border:1px solid #3b82f6; border-radius:10px; color:#60a5fa; font-size:16px; font-weight:600; cursor:pointer; margin-bottom:10px; transition:all 0.15s; width:fit-content; }
+  .listen-play-btn:hover { background:#1d4ed8; color:#fff; }
+  .listen-play-btn.playing { background:#0d2420; border-color:#10b981; color:#10b981; }
+  .listen-hint { font-size:14px; color:#4b5563; margin-bottom:10px; }
+  .show-script-btn { padding:8px 16px; background:transparent; border:1px solid #374151; border-radius:8px; color:#9ca3af; font-size:15px; cursor:pointer; }
+  .show-script-btn:hover { border-color:#6b7280; color:#9ca3af; }
+  .script-text { display:none; margin-top:12px; padding:16px; background:#0f1117; border-radius:8px; font-size:16px; color:#9ca3af; line-height:2.0; border:1px solid #1f2937; }
+  .script-text.show { display:block; }
+  .script-speaker { color:#60a5fa; font-weight:600; }
+
+  /* EMPTY STATE */
+  .empty-state { text-align:center; padding:40px 20px; color:#374151; }
+  .empty-state .icon { font-size:40px; margin-bottom:12px; }
+  .empty-state p { font-size:14px; }
+
+  /* MOBILE */
+  @media(max-width:600px) {
+    .two-col { flex-direction:column; }
+    .sidebar { width:100%; position:static; max-height:none; display:flex; flex-wrap:wrap; gap:6px; padding:8px; }
+    .sb-section { margin:0; }
+    .sb-week { display:none; }
+    .sb-days { display:flex !important; flex-wrap:wrap; gap:4px; }
+    .sb-day { padding:5px 10px; border:1px solid #1f2937; border-radius:20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>🎯 TOEIC 每日練習</h1>
+  <div class="main-tabs">
+    <button class="main-tab active" onclick="showPage('vocab',this)">📚 單字發音</button>
+    <button class="main-tab" onclick="showPage('listening',this)">🎧 聽力測驗</button>
+    <button class="main-tab" onclick="showPage('grammar',this)">📝 文法測驗</button>
+  </div>
+</div>
+
+<!-- VOCAB PAGE -->
+<div id="vocab" class="page active">
+  <div class="speed-row">
+    <span class="speed-label">播放速度：</span>
+    <button class="speed-btn" onclick="setSpeed(0.7,this)">慢速</button>
+    <button class="speed-btn active" onclick="setSpeed(1.0,this)">正常</button>
+    <button class="speed-btn" onclick="setSpeed(1.3,this)">快速</button>
+  </div>
+  <div class="two-col">
+    <div class="sidebar" id="vocab-sidebar"></div>
+    <div class="main-content" id="vocab-main"></div>
+  </div>
+</div>
+
+<!-- LISTENING PAGE -->
+<div id="listening" class="page">
+  <div class="speed-row">
+    <span class="speed-label">播放速度：</span>
+    <button class="speed-btn" onclick="setSpeed(0.7,this)">慢速</button>
+    <button class="speed-btn active" onclick="setSpeed(1.0,this)">正常</button>
+    <button class="speed-btn" onclick="setSpeed(1.3,this)">快速</button>
+  </div>
+  <div class="two-col">
+    <div class="sidebar" id="listen-sidebar"></div>
+    <div class="main-content" id="listen-main"></div>
+  </div>
+</div>
+
+<!-- GRAMMAR PAGE -->
+<div id="grammar" class="page">
+  <div class="two-col">
+    <div class="sidebar" id="grammar-sidebar"></div>
+    <div class="main-content" id="grammar-main"></div>
+  </div>
+</div>
+
+<script>
+let speed = 1.0;
+let activeCard = null, activeExEl = null;
+
+// ── DATA ──────────────────────────────────────────────────────
+const vocabData = {
+  "第1週": {
+    "第1天｜職場基礎": {
+      words: [
+        { en:"meeting",   ph:"/ˈmiːtɪŋ/",   pos:"n.",    zh:"會議",         ex:"We have a meeting at 9 AM.",         exZh:"我們早上9點有個會議。" },
+        { en:"office",    ph:"/ˈɒfɪs/",      pos:"n.",    zh:"辦公室",       ex:"She works in the office.",            exZh:"她在辦公室工作。" },
+        { en:"schedule",  ph:"/ˈskɛdʒuːl/",  pos:"n.",    zh:"行程表",       ex:"Check your schedule.",                exZh:"查看你的行程表。" },
+        { en:"manager",   ph:"/ˈmænɪdʒər/",  pos:"n.",    zh:"經理",         ex:"The manager is busy.",                exZh:"經理很忙。" },
+        { en:"report",    ph:"/rɪˈpɔːrt/",   pos:"n.",    zh:"報告",         ex:"Please send the report.",             exZh:"請傳送報告。" },
+        { en:"customer",  ph:"/ˈkʌstəmər/",  pos:"n.",    zh:"客戶",         ex:"The customer is happy.",              exZh:"客戶很滿意。" },
+        { en:"order",     ph:"/ˈɔːrdər/",    pos:"n./v.", zh:"訂單／訂購",   ex:"We received a new order.",            exZh:"我們收到一筆新訂單。" },
+        { en:"staff",     ph:"/stæf/",        pos:"n.",    zh:"員工（全體）", ex:"All staff must attend.",              exZh:"所有員工都必須出席。" },
+        { en:"available", ph:"/əˈveɪləbl/",  pos:"adj.",  zh:"有空的",       ex:"Are you available tomorrow?",         exZh:"你明天有空嗎？" },
+        { en:"confirm",   ph:"/kənˈfɜːrm/",  pos:"v.",    zh:"確認",         ex:"Please confirm your booking.",        exZh:"請確認你的預約。" },
+      ],
+      sentences: []
+    },
+    "第2天｜職場進階": {
+      words: [
+        { en:"department",ph:"/dɪˈpɑːrtmənt/",pos:"n.",   zh:"部門",         ex:"She works in the sales department.",  exZh:"她在銷售部門工作。" },
+        { en:"deadline",  ph:"/ˈdɛdlaɪn/",   pos:"n.",    zh:"截止日期",     ex:"The deadline is Friday.",             exZh:"截止日期是星期五。" },
+        { en:"invoice",   ph:"/ˈɪnvɔɪs/",    pos:"n.",    zh:"發票／帳單",   ex:"Please send the invoice.",            exZh:"請寄出發票。" },
+        { en:"budget",    ph:"/ˈbʌdʒɪt/",    pos:"n.",    zh:"預算",         ex:"We need to check the budget.",        exZh:"我們需要確認預算。" },
+        { en:"approve",   ph:"/əˈpruːv/",    pos:"v.",    zh:"批准",         ex:"The manager will approve the plan.",  exZh:"經理將批准這個計畫。" },
+        { en:"cancel",    ph:"/ˈkænsəl/",    pos:"v.",    zh:"取消",         ex:"We had to cancel the meeting.",       exZh:"我們不得不取消會議。" },
+        { en:"deliver",   ph:"/dɪˈlɪvər/",   pos:"v.",    zh:"運送／交付",   ex:"They will deliver the package tomorrow.", exZh:"他們明天會送來包裹。" },
+        { en:"request",   ph:"/rɪˈkwɛst/",   pos:"n./v.", zh:"要求／請求",   ex:"I have a request for you.",           exZh:"我有個請求。" },
+        { en:"position",  ph:"/pəˈzɪʃən/",   pos:"n.",    zh:"職位",         ex:"She applied for the position.",       exZh:"她應徵了這個職位。" },
+        { en:"respond",   ph:"/rɪˈspɒnd/",   pos:"v.",    zh:"回應",         ex:"Please respond to the email.",        exZh:"請回覆這封電子郵件。" },
+      ],
+      sentences: []
+    },
+    "第3天｜商務核心": {
+      words: [
+        { en:"contract",    ph:"/ˈkɒntrækt/",    pos:"n.",    zh:"合約",         ex:"Please sign the contract.",            exZh:"請簽署合約。" },
+        { en:"negotiate",   ph:"/nɪˈɡoʊʃieɪt/", pos:"v.",    zh:"協商",         ex:"We need to negotiate the price.",      exZh:"我們需要協商價格。" },
+        { en:"proposal",    ph:"/prəˈpoʊzəl/",   pos:"n.",    zh:"提案",         ex:"She submitted a proposal.",            exZh:"她提交了一份提案。" },
+        { en:"resign",      ph:"/rɪˈzaɪn/",      pos:"v.",    zh:"辭職",         ex:"He decided to resign.",                exZh:"他決定辭職。" },
+        { en:"promote",     ph:"/prəˈmoʊt/",     pos:"v.",    zh:"升遷／促銷",   ex:"She was promoted to manager.",         exZh:"她被升遷為經理。" },
+        { en:"salary",      ph:"/ˈsæləri/",      pos:"n.",    zh:"薪水",         ex:"The salary is very competitive.",      exZh:"薪水非常有競爭力。" },
+        { en:"interview",   ph:"/ˈɪntərvjuː/",  pos:"n./v.", zh:"面試",         ex:"I have an interview tomorrow.",        exZh:"我明天有面試。" },
+        { en:"colleague",   ph:"/ˈkɒliːɡ/",     pos:"n.",    zh:"同事",         ex:"My colleague helped me.",              exZh:"我的同事幫助了我。" },
+        { en:"assign",      ph:"/əˈsaɪn/",       pos:"v.",    zh:"指派",         ex:"The manager will assign the tasks.",   exZh:"經理將指派任務。" },
+        { en:"attend",      ph:"/əˈtɛnd/",       pos:"v.",    zh:"出席",         ex:"Please attend the meeting.",           exZh:"請出席會議。" },
+        { en:"postpone",    ph:"/poʊstˈpoʊn/",  pos:"v.",    zh:"延期",         ex:"We had to postpone the event.",        exZh:"我們不得不延期活動。" },
+        { en:"product",     ph:"/ˈprɒdʌkt/",    pos:"n.",    zh:"產品",         ex:"This product sells very well.",        exZh:"這個產品賣得很好。" },
+        { en:"expand",      ph:"/ɪkˈspænd/",    pos:"v.",    zh:"擴展",         ex:"The company plans to expand.",         exZh:"公司計畫擴展。" },
+        { en:"profit",      ph:"/ˈprɒfɪt/",     pos:"n.",    zh:"利潤",         ex:"Our profit increased this year.",      exZh:"我們今年的利潤增加了。" },
+        { en:"survey",      ph:"/ˈsɜːrveɪ/",    pos:"n./v.", zh:"調查",         ex:"We conducted a customer survey.",      exZh:"我們進行了客戶調查。" },
+        { en:"client",      ph:"/ˈklaɪənt/",    pos:"n.",    zh:"客戶（正式）", ex:"The client signed the contract.",      exZh:"客戶簽署了合約。" },
+        { en:"headquarters",ph:"/ˈhɛdkwɔːrtərz/",pos:"n.", zh:"總部",         ex:"Our headquarters is in Taipei.",       exZh:"我們的總部在台北。" },
+        { en:"annual",      ph:"/ˈænjuəl/",     pos:"adj.",  zh:"每年的",       ex:"This is our annual report.",           exZh:"這是我們的年度報告。" },
+        { en:"replace",     ph:"/rɪˈpleɪs/",    pos:"v.",    zh:"取代／替換",   ex:"We need to replace the equipment.",    exZh:"我們需要更換設備。" },
+        { en:"equipment",   ph:"/ɪˈkwɪpmənt/",  pos:"n.",    zh:"設備",         ex:"The equipment is very expensive.",     exZh:"這個設備非常昂貴。" },
+      ],
+      sentences: [
+        { en:"The manager is reviewing the contract.",    zh:"經理正在審查合約。" },
+        { en:"We need to negotiate the salary.",           zh:"我們需要協商薪水。" },
+        { en:"Please attend the annual meeting.",          zh:"請出席年度會議。" },
+        { en:"She was promoted to a new position.",        zh:"她被升遷到新職位。" },
+        { en:"Our headquarters is expanding this year.",   zh:"我們的總部今年正在擴展。" },
+        { en:"The deadline for the report is Friday.",     zh:"報告的截止日期是星期五。" },
+        { en:"Please confirm your availability.",          zh:"請確認您是否有空。" },
+        { en:"The customer requested a new invoice.",      zh:"客戶要求一張新發票。" },
+        { en:"We had to cancel the delivery.",             zh:"我們不得不取消配送。" },
+        { en:"The staff will respond to all requests.",    zh:"員工將回應所有要求。" },
+      ]
+    },
+    "第4天｜採購物流": {
+      words: [
+        { en:"expense",    ph:"/ɪkˈspɛns/",    pos:"n.",     zh:"費用",         ex:"Please submit your expenses.",         exZh:"請提交您的費用單。" },
+        { en:"refund",     ph:"/ˈriːfʌnd/",    pos:"n./v.",  zh:"退款",         ex:"I'd like to request a refund.",        exZh:"我想申請退款。" },
+        { en:"policy",     ph:"/ˈpɒləsi/",     pos:"n.",     zh:"政策／規定",   ex:"Read the company policy carefully.",   exZh:"請仔細閱讀公司規定。" },
+        { en:"recruit",    ph:"/rɪˈkruːt/",    pos:"v.",     zh:"招募",         ex:"We need to recruit new staff.",        exZh:"我們需要招募新員工。" },
+        { en:"training",   ph:"/ˈtreɪnɪŋ/",   pos:"n.",     zh:"培訓",         ex:"The training starts on Monday.",       exZh:"培訓從星期一開始。" },
+        { en:"branch",     ph:"/brɑːntʃ/",     pos:"n.",     zh:"分公司／分行", ex:"Our branch is in Taichung.",           exZh:"我們的分公司在台中。" },
+        { en:"supply",     ph:"/səˈplaɪ/",     pos:"n./v.",  zh:"供應／供給",   ex:"We supply parts to factories.",        exZh:"我們供應零件給工廠。" },
+        { en:"purchase",   ph:"/ˈpɜːrtʃəs/",  pos:"v./n.",  zh:"購買",         ex:"Please purchase the tickets online.",  exZh:"請在網路上購買票券。" },
+        { en:"freight",    ph:"/freɪt/",        pos:"n.",     zh:"貨運",         ex:"The freight cost is too high.",        exZh:"貨運費用太高了。" },
+        { en:"warehouse",  ph:"/ˈwɛrhaʊs/",   pos:"n.",     zh:"倉庫",         ex:"The goods are in the warehouse.",      exZh:"貨物在倉庫裡。" },
+        { en:"distribute", ph:"/dɪˈstrɪbjuːt/",pos:"v.",    zh:"分發／配送",   ex:"We distribute products nationwide.",   exZh:"我們在全國配送產品。" },
+        { en:"retail",     ph:"/ˈriːteɪl/",   pos:"n./adj.",zh:"零售",         ex:"This is a retail store.",              exZh:"這是一家零售店。" },
+        { en:"wholesale",  ph:"/ˈhoʊlseɪl/",  pos:"n./adj.",zh:"批發",         ex:"We sell products wholesale.",          exZh:"我們批發銷售產品。" },
+        { en:"shipment",   ph:"/ˈʃɪpmənt/",   pos:"n.",     zh:"貨物／出貨",   ex:"The shipment arrived on time.",        exZh:"貨物準時到達。" },
+        { en:"inventory",  ph:"/ˈɪnvəntɔːri/",pos:"n.",    zh:"庫存",         ex:"Check the inventory levels.",          exZh:"請確認庫存水準。" },
+      ],
+      sentences: [
+        { en:"The training session was postponed.",        zh:"培訓課程被延期了。" },
+        { en:"We were not able to meet the deadline.",     zh:"我們無法趕上截止日期。" },
+        { en:"She was promoted to branch manager.",        zh:"她被升遷為分公司經理。" },
+        { en:"The goods were delivered to the warehouse.", zh:"貨物已送達倉庫。" },
+        { en:"Please purchase the supplies before Friday.",zh:"請在星期五前購買物資。" },
+      ]
+    },
+  }
+};
+
+const listeningData = {
+  "第1週": {
+    "第1回｜辦公室對話": {
+      script: [
+        { speaker:"A", text:"Hi Sarah, are you coming to the meeting at 3?" },
+        { speaker:"B", text:"Actually, I just got an email. The manager is postponing it to tomorrow." },
+        { speaker:"A", text:"Oh really? Did he say what time?" },
+        { speaker:"B", text:"He's still confirming with the client. He'll respond by noon." },
+        { speaker:"A", text:"OK, I'll check my schedule and let you know if I'm available." },
+      ],
+      questions: [
+        { q:"會議原本幾點開始？", opts:["(A) 12點","(B) 3點","(C) 明天上午","(D) 不知道"], ans:1, exp:"A 說 'coming to the meeting at 3'，所以是下午3點。" },
+        { q:"為什麼會議延期？", opts:["(A) Sarah不能來","(B) 客戶取消了","(C) 經理通知延期","(D) 場地問題"], ans:2, exp:"B 說 'The manager is postponing it'，是經理決定延期。" },
+        { q:"經理什麼時候回覆時間？", opts:["(A) 下午3點","(B) 明天","(C) 中午前","(D) 馬上"], ans:2, exp:"B 說 'He'll respond by noon'，noon = 中午。" },
+      ]
+    },
+    "第2回｜電話訂單": {
+      script: [
+        { speaker:"A", text:"Good morning, this is David from the sales department." },
+        { speaker:"B", text:"Hi David, I'm calling about my order. I requested a delivery for Monday, but I haven't received it yet." },
+        { speaker:"A", text:"I'm sorry about that. Can I get your invoice number?" },
+        { speaker:"B", text:"Sure, it's 4872." },
+        { speaker:"A", text:"Thank you. I'll check with our team and respond to you by end of day." },
+      ],
+      questions: [
+        { q:"David 在哪個部門？", opts:["(A) 客服部","(B) 財務部","(C) 銷售部","(D) 物流部"], ans:2, exp:"David 說 'from the sales department'。" },
+        { q:"客戶打電話的原因？", opts:["(A) 取消訂單","(B) 訂單未到","(C) 發票錯誤","(D) 更改地址"], ans:1, exp:"客戶說 'I haven't received it yet'，貨還沒到。" },
+        { q:"David 何時回覆？", opts:["(A) 中午前","(B) 明天早上","(C) 今天下班前","(D) 一小時內"], ans:2, exp:"David 說 'by end of day'，今天下班前。" },
+      ]
+    },
+    "第3回｜培訓通知": {
+      script: [
+        { speaker:"A", text:"Did you hear? The training session was postponed." },
+        { speaker:"B", text:"Really? When was it rescheduled to?" },
+        { speaker:"A", text:"They weren't sure yet. The manager was waiting for the trainer to confirm." },
+        { speaker:"B", text:"I see. Were all the new recruits informed?" },
+        { speaker:"A", text:"Yes, an email was sent to everyone this morning." },
+      ],
+      questions: [
+        { q:"什麼被延期了？", opts:["(A) 會議","(B) 培訓課程","(C) 面試","(D) 產品發表"], ans:1, exp:"A 說 'The training session was postponed'。" },
+        { q:"為何還不確定新時間？", opts:["(A) 經理忘了","(B) 培訓師未確認","(C) 場地問題","(D) 預算不足"], ans:1, exp:"A 說 'waiting for the trainer to confirm'。" },
+        { q:"新員工如何被通知？", opts:["(A) 電話","(B) 開會","(C) 電子郵件","(D) 公告欄"], ans:2, exp:"A 說 'an email was sent to everyone'。" },
+      ]
+    },
+  }
+};
+
+const grammarData = {
+  "第1週": {
+    "第1回｜Be動詞": {
+      rule: "📌 規則：主詞決定用哪個 be 動詞\nI → am\nHe／She／It／單數名詞 → is\nYou／We／They／複數名詞 → are\n\n💡 口訣：我am、你你們we they are、其他單數is",
+      questions: [
+        { q:"The customer ___ very happy with the service.", opts:["(A) am","(B) is","(C) are","(D) be"], ans:1,
+          exp:"✏️ The customer = 一個客人 = 單數第三人稱，所以用 is。\n\n❌ am 只能用在 I\n❌ are 用在 you／we／they 或複數\n❌ be 是原形，不能單獨當動詞" },
+        { q:"I ___ the new staff member.", opts:["(A) am","(B) is","(C) are","(D) were"], ans:0,
+          exp:"✏️ I 是第一人稱單數，be 動詞永遠用 am，沒有例外。\n\n記法：I am = 我是，這是英文最基本的句型！" },
+        { q:"We ___ not available on Monday.", opts:["(A) am","(B) is","(C) are","(D) be"], ans:2,
+          exp:"✏️ We = 我們 = 複數，be 動詞用 are。\n否定句型：We are not = We aren't（縮寫）\n\n💡 You、We、They 這三個都配 are" },
+        { q:"The reports ___ on the manager's desk.", opts:["(A) am","(B) is","(C) are","(D) was"], ans:2,
+          exp:"✏️ reports = 報告們 = 複數名詞（注意有 s），所以用 are。\n\n單數：The report IS on the desk.\n複數：The reports ARE on the desk.\n\n💡 看到名詞有 s，通常是複數，配 are" },
+        { q:"She ___ in the sales department.", opts:["(A) am","(B) is","(C) are","(D) were"], ans:1,
+          exp:"✏️ She = 她 = 第三人稱單數，用 is。\n\nHe、She、It 這三個都配 is\n\n💡 記法：He is、She is、It is — 都是 is！" },
+      ]
+    },
+    "第2回｜現在式動詞": {
+      rule: "📌 規則：一般動詞現在式\nI／You／We／They → 動詞原形（不加s）\nHe／She／It／單數名詞 → 動詞原形 + s\n\n特殊變化：\nhave → has\ngo → goes\ndo → does\n\n💡 口訣：他她它單數，動詞記得加s",
+      questions: [
+        { q:"The manager ___ the report every Monday.", opts:["(A) review","(B) reviews","(C) reviewing","(D) reviewed"], ans:1,
+          exp:"✏️ The manager = 單數第三人稱，現在式要加 s → reviews\n\nevery Monday（每個星期一）= 習慣動作 = 用現在式\n\n❌ reviewing 是進行式，要配 is reviewing\n❌ reviewed 是過去式" },
+        { q:"We ___ to all customer requests.", opts:["(A) responds","(B) responding","(C) respond","(D) responded"], ans:2,
+          exp:"✏️ We = 複數，動詞不加 s → respond\n\n記法：We respond（我們回應）—— We 後面動詞保持原形\n\n❌ responds 是給 He／She 用的\n❌ responding 要配 are responding" },
+        { q:"He ___ a new position in the company.", opts:["(A) have","(B) has","(C) having","(D) had"], ans:1,
+          exp:"✏️ He = 單數，have 在第三人稱單數要變成 has（特殊變化）\n\n必背：\nI have / You have / We have / They have\nHe has / She has / It has\n\n💡 have 是最常考的特殊變化！" },
+        { q:"They ___ packages to our office every day.", opts:["(A) delivers","(B) delivering","(C) deliver","(D) delivered"], ans:2,
+          exp:"✏️ They = 複數，動詞不加 s → deliver\n\nevery day（每天）= 習慣動作 = 現在式\n\n❌ delivers 是給 He／She 用的\n❌ delivering 要配 are delivering" },
+        { q:"She ___ to work by bus.", opts:["(A) go","(B) going","(C) goes","(D) gone"], ans:2,
+          exp:"✏️ She = 單數，go 的第三人稱變化是 goes（字尾 o 加 es）\n\n字尾加 es 的規則：go→goes、do→does\n一般字尾加 s：work→works、read→reads\n\n💡 記住：She goes to work 是超高頻句型！" },
+      ]
+    },
+    "第3回｜現在進行式": {
+      rule: "📌 規則：現在進行式 = 正在做某事\n句型：主詞 + am／is／are + 動詞ing\n\n常見關鍵字：\nnow、right now（現在）\ncurrently（目前）\nat the moment（此刻）\n\n動詞加ing注意：\n一般：work → working\n字尾e去掉：write → writing\n短母音重複字尾：sit → sitting",
+      questions: [
+        { q:"She ___ the annual report right now.", opts:["(A) write","(B) writes","(C) is writing","(D) written"], ans:2,
+          exp:"✏️ right now = 正在進行 → 用進行式\nShe（單數）→ is\nwrite 字尾有 e，去 e 加 ing → writing\n\n完整句型：She is writing = 她正在寫\n\n💡 看到 right now / now，優先想進行式！" },
+        { q:"They ___ the salary with the client.", opts:["(A) negotiate","(B) are negotiating","(C) negotiates","(D) negotiated"], ans:1,
+          exp:"✏️ They（複數）→ are\nnegotiate 字尾有 e，去 e 加 ing → negotiating\n\n完整：They are negotiating = 他們正在協商\n\n❌ negotiate 是現在式原形（They negotiate 也對，但沒有進行中的意味）\n❌ negotiates 是給 He／She 的現在式" },
+        { q:"I ___ for the interview.", opts:["(A) am preparing","(B) is preparing","(C) prepare","(D) prepared"], ans:0,
+          exp:"✏️ I（第一人稱）→ am\nprepare 字尾有 e，去 e 加 ing → preparing\n\n完整：I am preparing = 我正在準備\n\n⚠️ 注意：am preparing（進行式）= 我正在準備\n vs. am prepared（被動）= 我已準備好了\n意思不同，多益常考！" },
+        { q:"The manager ___ the contract right now.", opts:["(A) review","(B) reviews","(C) is reviewing","(D) reviewed"], ans:2,
+          exp:"✏️ right now = 進行式\nThe manager（單數）→ is\nreview 一般加 ing → reviewing\n\n完整：The manager is reviewing = 經理正在審查\n\n💡 right now 是進行式的強烈信號！" },
+        { q:"We ___ the meeting until next week.", opts:["(A) postpone","(B) postpones","(C) are postponing","(D) postponed"], ans:2,
+          exp:"✏️ We（複數）→ are\npostpone 字尾有 e，去 e 加 ing → postponing\n\n完整：We are postponing = 我們正在延期\n\n💡 進行式也可以表示「已決定要做的近期計畫」\n例：We are postponing the meeting.（我們決定把會議延期）" },
+      ]
+    },
+    "第4回｜過去式 was／were": {
+      rule: "📌 規則：be 動詞的過去式\nI／He／She／It／單數名詞 → was\nYou／We／They／複數名詞 → were\n\n常見關鍵字（表示過去）：\nyesterday（昨天）\nlast week／month／year（上週／月／年）\nago（...前）\n\n否定：was not = wasn't / were not = weren't",
+      questions: [
+        { q:"The manager ___ in a meeting all morning.", opts:["(A) is","(B) are","(C) was","(D) were"], ans:2,
+          exp:"✏️ The manager = 單數第三人稱\n過去式單數 → was\n\nall morning（整個早上）暗示是過去的事\n\n現在：The manager IS in a meeting.\n過去：The manager WAS in a meeting.\n\n💡 is 的過去式 = was，記住這對！" },
+        { q:"We ___ not able to meet the deadline.", opts:["(A) is","(B) am","(C) was","(D) were"], ans:3,
+          exp:"✏️ We = 複數\n過去式複數 → were\n否定：were not able = weren't able（無法）\n\n比較：\n現在：We ARE not able to...\n過去：We WERE not able to...\n\n💡 meet the deadline = 趕上截止日期，多益超常考片語！" },
+        { q:"I ___ surprised by the new policy.", opts:["(A) were","(B) was","(C) am","(D) are"], ans:1,
+          exp:"✏️ I = 第一人稱單數\n過去式 → was（不是 were！）\n\n⚠️ 注意：were 的範圍是 you／we／they，不包括 I\nI was（過去）/ I am（現在）\n\n句型：I was surprised by... = 我對...感到驚訝（被動語態）" },
+        { q:"The packages ___ delivered yesterday.", opts:["(A) is","(B) are","(C) was","(D) were"], ans:3,
+          exp:"✏️ packages = 包裹們 = 複數（有 s）\n過去式複數 → were\nyesterday（昨天）= 過去式信號\n\n完整：The packages were delivered = 包裹被送達了（被動語態）\n\n💡 delivered yesterday 是多益物流類題目超常見的句型！" },
+        { q:"She ___ promoted to branch manager last year.", opts:["(A) is","(B) are","(C) was","(D) were"], ans:2,
+          exp:"✏️ She = 單數第三人稱\n過去式單數 → was\nlast year（去年）= 過去式信號\n\n完整：She was promoted = 她被升遷了（被動語態）\n\n💡 was／were + 動詞過去分詞 = 被動語態，多益超常考！\n例：was promoted（被升遷）、were delivered（被送達）" },
+      ]
+    },
+  }
+};
+
+// ── SPEECH ──────────────────────────────────────────────────
+function setSpeed(s, btn) {
+  speed = s;
+  document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function stopAll() {
+  speechSynthesis.cancel();
+  if (activeCard) { activeCard.classList.remove('playing','playing-word'); activeCard = null; }
+  if (activeExEl) { activeExEl.classList.remove('playing-ex'); activeExEl = null; }
+}
+function speakText(text, onEnd) {
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=speed;
+  if (onEnd) u.onend=onEnd;
+  speechSynthesis.speak(u);
+}
+function speakScript(lines, idx, btn) {
+  if (idx>=lines.length) { btn.classList.remove('playing'); btn.textContent='▶ 播放對話'; return; }
+  const u = new SpeechSynthesisUtterance(lines[idx].text);
+  u.lang='en-US'; u.rate=speed;
+  u.onend=()=>setTimeout(()=>speakScript(lines,idx+1,btn),400);
+  speechSynthesis.speak(u);
+}
+
+// ── SIDEBAR BUILDER ──────────────────────────────────────────
+function buildSidebar(containerId, data, onSelect, type) {
+  const sb = document.getElementById(containerId);
+  sb.innerHTML = '';
+  let firstDay = null;
+  Object.keys(data).forEach((week, wi) => {
+    const sec = document.createElement('div');
+    sec.className = 'sb-section';
+    const wBtn = document.createElement('div');
+    wBtn.className = 'sb-week open';
+    wBtn.innerHTML = `<span>${week}</span><span class="arrow">▼</span>`;
+    const days = document.createElement('div');
+    days.className = 'sb-days';
+    Object.keys(data[week]).forEach((day, di) => {
+      const dBtn = document.createElement('div');
+      dBtn.className = 'sb-day';
+      dBtn.innerHTML = `<span class="dot"></span>${day}`;
+      dBtn.dataset.week = week;
+      dBtn.dataset.day = day;
+      dBtn.addEventListener('click', () => {
+        sb.querySelectorAll('.sb-day').forEach(b=>b.classList.remove('active'));
+        dBtn.classList.add('active');
+        onSelect(week, day, data[week][day]);
+      });
+      if (!firstDay) firstDay = dBtn;
+      days.appendChild(dBtn);
+    });
+    wBtn.addEventListener('click', () => {
+      wBtn.classList.toggle('open');
+      days.style.display = wBtn.classList.contains('open') ? 'block' : 'none';
+    });
+    sec.appendChild(wBtn); sec.appendChild(days);
+    sb.appendChild(sec);
+  });
+  if (firstDay) firstDay.click();
+}
+
+// ── VOCAB ────────────────────────────────────────────────────
+function renderVocab(week, day, data) {
+  const main = document.getElementById('vocab-main');
+  main.innerHTML = `<p class="sec-label">${week} · ${day}</p>`;
+  const list = document.createElement('div');
+  list.className = 'word-list';
+  data.words.forEach(w => {
+    const item = document.createElement('div');
+    item.className = 'word-item';
+    const header = document.createElement('div');
+    header.className = 'word-header';
+    header.innerHTML = `
+      <div class="word-main">
+        <div class="word-en">${w.en}</div>
+        <div class="word-phonetic">${w.ph}</div>
+        <div class="word-meta"><span class="word-pos">${w.pos}</span>${w.zh}</div>
+      </div>
+      <div class="word-play-zone"><button class="speak-btn">🔊</button></div>`;
+    const example = document.createElement('div');
+    example.className = 'word-example';
+    example.innerHTML = `
+      <div class="example-en"><span class="ex-speak">▶ 例句</span>${w.ex}</div>
+      <div class="example-zh">${w.exZh}</div>`;
+    // 文字區：點一下播放+展開，再點一下收起
+    header.querySelector('.word-main').addEventListener('click', e => {
+      e.stopPropagation();
+      const isOpen = item.classList.contains('open');
+      if (isOpen) {
+        // 已展開 → 收起
+        item.classList.remove('open');
+        stopAll();
+      } else {
+        // 未展開 → 播放 + 展開
+        document.querySelectorAll('.word-item.open').forEach(el => el.classList.remove('open'));
+        item.classList.add('open');
+        stopAll();
+        item.classList.add('playing-word'); activeCard=item;
+        speakText(w.en,()=>{item.classList.remove('playing-word');activeCard=null;});
+      }
+    });
+    // 右側🔊大按鈕：只播放，不影響展開狀態，可重複按
+    header.querySelector('.word-play-zone').addEventListener('click', e => {
+      e.stopPropagation();
+      stopAll();
+      item.classList.add('playing-word'); activeCard=item;
+      speakText(w.en,()=>{item.classList.remove('playing-word');activeCard=null;});
+    });
+    // 例句：點一下播放，再點一下停止
+    example.querySelector('.example-en').addEventListener('click', e => {
+      e.stopPropagation();
+      const el=example.querySelector('.example-en');
+      if(el.classList.contains('playing-ex')){
+        stopAll(); return;
+      }
+      stopAll();
+      el.classList.add('playing-ex'); activeExEl=el;
+      speakText(w.ex,()=>{el.classList.remove('playing-ex');activeExEl=null;});
+    });
+    item.appendChild(header); item.appendChild(example); list.appendChild(item);
+  });
+  main.appendChild(list);
+
+  if (data.sentences && data.sentences.length > 0) {
+    const divider = document.createElement('hr');
+    divider.style.cssText='border:none;border-top:1px solid #1f2937;margin:20px 0';
+    main.appendChild(divider);
+    const sLabel = document.createElement('p');
+    sLabel.className='sec-label'; sLabel.textContent='口說跟讀例句';
+    main.appendChild(sLabel);
+    const playAllBtn = document.createElement('button');
+    playAllBtn.className='play-all-btn'; playAllBtn.textContent='▶ 全部播放（跟著唸）';
+    let paActive=false, paIdx=0;
+    const sentList = document.createElement('div');
+    sentList.className='sentence-list';
+    const sentCards = [];
+    data.sentences.forEach(s => {
+      const card=document.createElement('div');
+      card.className='sentence-card';
+      card.innerHTML=`<div class="s-play-btn">▶</div><div><div class="s-en">${s.en}</div><div class="s-zh">${s.zh}</div></div>`;
+      card.addEventListener('click',()=>{
+        stopAll(); card.classList.add('playing'); activeCard=card;
+        speakText(s.en,()=>{card.classList.remove('playing');activeCard=null;});
+      });
+      sentCards.push({card,s});
+      sentList.appendChild(card);
+    });
+    function playNext() {
+      if (!paActive||paIdx>=sentCards.length){paActive=false;playAllBtn.textContent='▶ 全部播放（跟著唸）';return;}
+      const {card,s}=sentCards[paIdx];
+      card.classList.add('playing'); activeCard=card;
+      const u=new SpeechSynthesisUtterance(s.en);
+      u.lang='en-US';u.rate=speed;
+      u.onend=()=>{card.classList.remove('playing');paIdx++;setTimeout(playNext,700);};
+      speechSynthesis.speak(u);
+    }
+    playAllBtn.addEventListener('click',()=>{
+      if(paActive){stopAll();paActive=false;playAllBtn.textContent='▶ 全部播放（跟著唸）';return;}
+      stopAll();paActive=true;paIdx=0;playAllBtn.textContent='⏹ 停止播放';playNext();
+    });
+    main.appendChild(playAllBtn); main.appendChild(sentList);
+  }
+}
+
+// ── LISTENING ────────────────────────────────────────────────
+const listenAnswers = {};
+function renderListening(week, day, data) {
+  const main = document.getElementById('listen-main');
+  main.innerHTML = `<p class="sec-label">${week} · ${day}</p>`;
+  const key = week+day;
+  const scriptLines = data.script.map(l=>`<div><span class="script-speaker">${l.speaker}：</span>${l.text}</div>`).join('');
+  const listenBox = document.createElement('div');
+  listenBox.className='listen-box';
+  listenBox.innerHTML=`
+    <div class="listen-title">🎧 聽力對話</div>
+    <button class="listen-play-btn" id="lplay-btn">▶ 播放對話</button>
+    <div class="listen-hint">💡 建議先聽2遍再作答</div>
+    <button class="show-script-btn">顯示對話原文</button>
+    <div class="script-text">${scriptLines}</div>`;
+  const playBtn=listenBox.querySelector('#lplay-btn');
+  playBtn.addEventListener('click',()=>{
+    stopAll(); playBtn.classList.add('playing'); playBtn.textContent='🔊 播放中...';
+    speakScript(data.script,0,playBtn);
+  });
+  listenBox.querySelector('.show-script-btn').addEventListener('click',function(){
+    const st=listenBox.querySelector('.script-text');
+    st.classList.toggle('show');
+    this.textContent=st.classList.contains('show')?'隱藏對話原文':'顯示對話原文';
+  });
+  main.appendChild(listenBox);
+
+  data.questions.forEach((q,qi)=>{
+    const box=document.createElement('div'); box.className='quiz-box';
+    const fb=document.createElement('div'); fb.className='quiz-feedback';
+    box.innerHTML=`<div class="quiz-num">問題 ${qi+1}</div><div class="quiz-q">${q.q}</div>`;
+    const opts=document.createElement('div'); opts.className='options';
+    q.opts.forEach((o,oi)=>{
+      const btn=document.createElement('button'); btn.className='opt'; btn.textContent=o;
+      const aKey=key+'-'+qi;
+      if(listenAnswers[aKey]!==undefined){
+        btn.disabled=true;
+        if(oi===q.ans)btn.classList.add('correct');
+        else if(oi===listenAnswers[aKey])btn.classList.add('wrong');
+      }
+      btn.addEventListener('click',()=>{
+        if(listenAnswers[aKey]!==undefined)return;
+        listenAnswers[aKey]=oi;
+        opts.querySelectorAll('.opt').forEach((b,i)=>{
+          b.disabled=true;
+          if(i===q.ans)b.classList.add('correct');
+          else if(i===oi)b.classList.add('wrong');
+        });
+        fb.className='quiz-feedback show '+(oi===q.ans?'ok':'bad');
+        fb.innerHTML=(oi===q.ans?'✅ 答對了！<br><br>':'❌ 答錯了。<br><br>')+q.exp.replace(/\\n/g,'<br>');
+      });
+      opts.appendChild(btn);
+    });
+    if(listenAnswers[key+'-'+qi]!==undefined){
+      fb.className='quiz-feedback show '+(listenAnswers[key+'-'+qi]===q.ans?'ok':'bad');
+      fb.innerHTML=(listenAnswers[key+'-'+qi]===q.ans?'✅ 答對了！':'❌ 答錯了。')+' '+q.exp;
+    }
+    box.appendChild(opts); box.appendChild(fb); main.appendChild(box);
+  });
+}
+
+// ── GRAMMAR ─────────────────────────────────────────────────
+const grammarAnswers = {};
+function renderGrammar(week, day, data) {
+  const main = document.getElementById('grammar-main');
+  main.innerHTML = `<p class="sec-label">${week} · ${day}</p>`;
+  const key = week+day;
+  data.questions.forEach((q,qi)=>{
+    const box=document.createElement('div'); box.className='quiz-box';
+    const fb=document.createElement('div'); fb.className='quiz-feedback';
+    box.innerHTML=`<div class="quiz-num">題目 ${qi+1}</div><div class="quiz-q">${q.q.replace('___','<span class="blank">___</span>')}</div>`;
+    const opts=document.createElement('div'); opts.className='options';
+    q.opts.forEach((o,oi)=>{
+      const btn=document.createElement('button'); btn.className='opt'; btn.textContent=o;
+      const aKey=key+'-'+qi;
+      if(grammarAnswers[aKey]!==undefined){
+        btn.disabled=true;
+        if(oi===q.ans)btn.classList.add('correct');
+        else if(oi===grammarAnswers[aKey])btn.classList.add('wrong');
+      }
+      btn.addEventListener('click',()=>{
+        if(grammarAnswers[aKey]!==undefined)return;
+        grammarAnswers[aKey]=oi;
+        opts.querySelectorAll('.opt').forEach((b,i)=>{
+          b.disabled=true;
+          if(i===q.ans)b.classList.add('correct');
+          else if(i===oi)b.classList.add('wrong');
+        });
+        fb.className='quiz-feedback show '+(oi===q.ans?'ok':'bad');
+        fb.innerHTML=(oi===q.ans?'✅ 答對了！<br><br>':'❌ 答錯了。<br><br>')+q.exp.replace(/\\n/g,'<br>');
+      });
+      opts.appendChild(btn);
+    });
+    if(grammarAnswers[key+'-'+qi]!==undefined){
+      fb.className='quiz-feedback show '+(grammarAnswers[key+'-'+qi]===q.ans?'ok':'bad');
+      fb.innerHTML=(grammarAnswers[key+'-'+qi]===q.ans?'✅ 答對了！<br><br>':'❌ 答錯了。<br><br>')+q.exp.replace(/\\n/g,'<br>');
+    }
+    box.appendChild(opts); box.appendChild(fb); main.appendChild(box);
+  });
+}
+
+// ── PAGE NAV ─────────────────────────────────────────────────
+function showPage(id, btn) {
+  stopAll();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.main-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active'); btn.classList.add('active');
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+buildSidebar('vocab-sidebar',   vocabData,    renderVocab,     'v');
+buildSidebar('listen-sidebar',  listeningData, renderListening, 'l');
+buildSidebar('grammar-sidebar', grammarData,   renderGrammar,   'g');
+</script>
+</body>
+</html>
