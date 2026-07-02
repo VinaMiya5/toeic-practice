@@ -105,6 +105,30 @@ body{font-family:'Inter','Noto Sans TC',sans-serif;background:#0f1117;color:#e8e
 #back-to-top{position:fixed;bottom:28px;right:24px;width:52px;height:52px;border-radius:50%;background:#3b82f6;border:none;color:#fff;font-size:22px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(59,130,246,0.4);transition:all 0.2s;z-index:999}
 #back-to-top:hover{background:#2563eb;transform:translateY(-2px)}
 #back-to-top.show{display:flex}
+.weak-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#1a1d27;border:1px solid #ef4444;border-radius:12px;padding:12px 16px;margin:16px 16px 0}
+.weak-bar-text{font-size:15px;color:#fca5a5;font-weight:600}
+.weak-bar-btn{padding:9px 16px;background:#2d1212;border:1px solid #ef4444;border-radius:8px;color:#fca5a5;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+.weak-bar-btn:hover{background:#3a1717}
+.weak-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;padding:20px;overflow-y:auto}
+.weak-modal-overlay.show{display:block}
+.weak-modal{max-width:560px;margin:30px auto;background:#1a1d27;border:1px solid #2d3748;border-radius:16px;padding:20px}
+.weak-modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.weak-modal-head h2{font-size:18px;color:#fff}
+.weak-close{background:none;border:none;color:#9ca3af;font-size:22px;cursor:pointer;padding:4px 8px}
+.weak-stats-row{display:flex;gap:10px;margin-bottom:16px}
+.weak-stat-card{flex:1;background:#0f1117;border:1px solid #1f2937;border-radius:10px;padding:12px;text-align:center}
+.weak-stat-num{font-size:24px;font-weight:700;color:#fff}
+.weak-stat-label{font-size:12px;color:#6b7280;margin-top:4px}
+.weak-item{background:#0f1117;border:1px solid #1f2937;border-radius:10px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.weak-item:hover{border-color:#ef4444}
+.weak-item-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.weak-item-loc{font-size:12px;color:#6b7280}
+.weak-item-badge{font-size:12px;font-weight:700;color:#fca5a5;background:#2d1212;border-radius:20px;padding:2px 10px}
+.weak-item-badge.mastered{color:#6ee7b7;background:#0d2420}
+.weak-item-q{font-size:14px;color:#d1d5db;line-height:1.5}
+.weak-empty{text-align:center;color:#6b7280;font-size:14px;padding:30px 0}
+.listen-photo-wrap{margin-bottom:14px;border-radius:14px;overflow:hidden;border:1px solid #1f2937;background:#0f1117}
+.listen-photo{width:100%;max-height:320px;object-fit:cover;display:block}
 @media(max-width:600px){.two-col{flex-direction:column}.sidebar{width:100%;position:static;max-height:none;display:flex;flex-wrap:wrap;gap:6px;padding:8px}.sb-week{display:none}.sb-days{display:flex !important;flex-wrap:wrap;gap:4px}.sb-day{padding:5px 10px;border:1px solid #1f2937;border-radius:20px}}
 </style>
 </head>
@@ -132,6 +156,10 @@ body{font-family:'Inter','Noto Sans TC',sans-serif;background:#0f1117;color:#e8e
   </div>
 </div>
 <div id="listening" class="page">
+  <div class="weak-bar">
+    <span class="weak-bar-text" id="weak-bar-text">📊 尚無弱點紀錄</span>
+    <button class="weak-bar-btn" onclick="openWeakModal()">查看聽力弱點</button>
+  </div>
   <div class="two-col">
     <div class="sidebar" id="listen-sidebar"></div>
     <div class="main-content" id="listen-main"></div>
@@ -151,6 +179,17 @@ body{font-family:'Inter','Noto Sans TC',sans-serif;background:#0f1117;color:#e8e
 </div>
 
 <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">▲</button>
+
+<div class="weak-modal-overlay" id="weak-modal-overlay">
+  <div class="weak-modal">
+    <div class="weak-modal-head">
+      <h2>🎧 聽力弱點總覽</h2>
+      <button class="weak-close" onclick="closeWeakModal()">✕</button>
+    </div>
+    <div class="weak-stats-row" id="weak-stats-row"></div>
+    <div id="weak-list"></div>
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════════════
@@ -1117,7 +1156,9 @@ const vocabData   = {
           "zh": "我們下週來宣布新的品牌方向。"
         }
       ]
-    },
+    }
+  },
+  "第2週": {
     "第8天｜職場形容詞": {
       "words": [
         {
@@ -1621,7 +1662,9 @@ const listeningData = {
           "exp": "A 說 'announce our new brand direction next week'，宣布新品牌方向。"
         }
       ]
-    },
+    }
+  },
+  "第2週": {
     "第7回｜新流程討論": {
       "script": [
         {
@@ -1678,6 +1721,104 @@ const listeningData = {
           ],
           "ans": 1,
           "exp": "A 說 'significant impact on our work'，會有顯著影響。"
+        }
+      ]
+    },
+    "第8回｜Part2 簡答對話①": {
+      "script": [
+        { "speaker": "A", "text": "When is the report due?" },
+        { "speaker": "B", "text": "By Friday afternoon." }
+      ],
+      "questions": [
+        {
+          "q": "報告的截止時間是？",
+          "opts": ["(A) 星期一早上", "(B) 星期五下午", "(C) 星期五早上", "(D) 下星期一"],
+          "ans": 1,
+          "exp": "B 回答 'By Friday afternoon'，星期五下午。"
+        }
+      ]
+    },
+    "第9回｜Part2 簡答對話②": {
+      "script": [
+        { "speaker": "A", "text": "Could you send me the invoice today?" },
+        { "speaker": "B", "text": "Sure, I'll email it right after lunch." }
+      ],
+      "questions": [
+        {
+          "q": "B 什麼時候會寄出發票？",
+          "opts": ["(A) 現在馬上", "(B) 午餐後", "(C) 明天", "(D) 下班前"],
+          "ans": 1,
+          "exp": "B 說 'right after lunch'，午餐後。"
+        }
+      ]
+    },
+    "第10回｜Part2 簡答對話③": {
+      "script": [
+        { "speaker": "A", "text": "Is the printer on the third floor working?" },
+        { "speaker": "B", "text": "No, it's still out of order." }
+      ],
+      "questions": [
+        {
+          "q": "三樓的印表機狀況如何？",
+          "opts": ["(A) 正常運作", "(B) 故障中", "(C) 已經修好", "(D) 剛買的"],
+          "ans": 1,
+          "exp": "B 說 'still out of order'，仍然故障。"
+        }
+      ]
+    },
+    "第11回｜Part3 簡短對話①": {
+      "script": [
+        { "speaker": "A", "text": "Hi, I'm calling to ask about my delivery. It hasn't arrived yet." },
+        { "speaker": "B", "text": "I'm sorry for the delay. Could you give me your order number?" },
+        { "speaker": "A", "text": "Yes, it's 3391." },
+        { "speaker": "B", "text": "Thank you. Let me check... it looks like it left the warehouse this morning, so it should arrive by tomorrow." },
+        { "speaker": "A", "text": "OK, thank you for checking." }
+      ],
+      "questions": [
+        {
+          "q": "A 打電話的原因是？",
+          "opts": ["(A) 想取消訂單", "(B) 貨物還沒到", "(C) 想更改地址", "(D) 詢問價格"],
+          "ans": 1,
+          "exp": "A 說 'It hasn't arrived yet'，貨物還沒到。"
+        },
+        {
+          "q": "訂單編號是多少？",
+          "opts": ["(A) 3319", "(B) 3391", "(C) 3913", "(D) 3139"],
+          "ans": 1,
+          "exp": "A 說 'it's 3391'。"
+        },
+        {
+          "q": "貨物預計何時送達？",
+          "opts": ["(A) 今天下午", "(B) 明天", "(C) 下星期", "(D) 已經送達"],
+          "ans": 1,
+          "exp": "B 說 'should arrive by tomorrow'，明天送達。"
+        }
+      ]
+    },
+    "第12回｜Part4 簡短獨白①": {
+      "script": [
+        { "speaker": "Narrator", "text": "Attention all staff. The office will be closed this Friday for building maintenance." },
+        { "speaker": "Narrator", "text": "Please make sure to save your work and shut down your computers before you leave on Thursday." },
+        { "speaker": "Narrator", "text": "The office will reopen as usual on Monday morning." }
+      ],
+      "questions": [
+        {
+          "q": "辦公室星期五為什麼關閉？",
+          "opts": ["(A) 國定假日", "(B) 建築維修", "(C) 停電", "(D) 員工旅遊"],
+          "ans": 1,
+          "exp": "提到 'closed this Friday for building maintenance'，因建築維修。"
+        },
+        {
+          "q": "員工星期四離開前該做什麼？",
+          "opts": ["(A) 繳交報告", "(B) 儲存工作並關機", "(C) 打掃辦公室", "(D) 開會"],
+          "ans": 1,
+          "exp": "提到 'save your work and shut down your computers'。"
+        },
+        {
+          "q": "辦公室何時恢復正常？",
+          "opts": ["(A) 星期五下午", "(B) 星期六", "(C) 星期一早上", "(D) 星期五晚上"],
+          "ans": 2,
+          "exp": "提到 'reopen as usual on Monday morning'，星期一早上。"
         }
       ]
     }
@@ -2106,7 +2247,8 @@ const grammarData = {
 }
 ]
 }
-,
+},
+"第2週": {
 "第8回｜現在完成式": {
 "rule": "📌 規則：現在完成式\n主詞 + have／has + 過去分詞\n\nI／You／We／They → have + 過去分詞\nHe／She／It／單數名詞 → has + 過去分詞\n\n用法：過去發生、對現在有影響的事\n\n常見關鍵字：\nalready（已經）\nyet（還沒／已經）\njust（剛剛）\nsince（自從）\nfor（持續了多久）\never／never（曾經／從未）\n\n常見過去分詞：\nsend→sent, write→written, make→made\ntake→taken, give→given, see→seen\nbegin→begun, know→known\n\n💡 口訣：他她它用has，其他用have！",
 "questions": [
@@ -2425,7 +2567,9 @@ const readingData = {
           "exp": "Email 說 'revenue target...NT$5 million'，目標是NT$500萬。"
         }
       ]
-    },
+    }
+  },
+  "第2週": {
     "第6回｜會議通知": {
       "type": "📋 會議通知",
       "title": "部門主管強制會議",
@@ -2565,7 +2709,6 @@ function buildSidebar(containerId, data, onSelect) {
         dBtn.classList.add('active');
         onSelect(week, day, data[week][day]);
       });
-      if (!firstDay) firstDay = dBtn;
       dayList.appendChild(dBtn);
     });
     wBtn.addEventListener('click', () => {
@@ -2575,7 +2718,8 @@ function buildSidebar(containerId, data, onSelect) {
     sec.appendChild(wBtn); sec.appendChild(dayList);
     sb.appendChild(sec);
   });
-  if (firstDay) firstDay.click();
+  const allDays = sb.querySelectorAll('.sb-day');
+  if (allDays.length) allDays[allDays.length - 1].click();
 }
 
 function renderVocab(week, day, data) {
@@ -2645,11 +2789,83 @@ function renderVocab(week, day, data) {
   }
 }
 
-const listenAnswers = {};
+let listenAnswers = {};
+try { listenAnswers = JSON.parse(localStorage.getItem('toeic_listenAnswers') || '{}'); } catch (e) { listenAnswers = {}; }
+let listenStats = {};
+try { listenStats = JSON.parse(localStorage.getItem('toeic_listenStats') || '{}'); } catch (e) { listenStats = {}; }
+function saveListenAnswers() { try { localStorage.setItem('toeic_listenAnswers', JSON.stringify(listenAnswers)); } catch (e) {} }
+function saveListenStats() { try { localStorage.setItem('toeic_listenStats', JSON.stringify(listenStats)); } catch (e) {} }
+
+function getWeakList() {
+  return Object.keys(listenStats).map(k => listenStats[k]).filter(s => s.wrong > 0).sort((a, b) => b.wrong - a.wrong);
+}
+function refreshWeakBadge() {
+  const bar = document.getElementById('weak-bar-text');
+  if (!bar) return;
+  const list = getWeakList();
+  bar.textContent = list.length === 0 ? '📊 尚無弱點紀錄，繼續加油！' : ('📊 目前有 ' + list.length + ' 題聽力弱點待加強');
+}
+function openWeakModal() {
+  const list = getWeakList();
+  let totalCorrect = 0, totalWrong = 0;
+  Object.values(listenStats).forEach(s => { totalCorrect += s.correct; totalWrong += s.wrong; });
+  const totalAttempts = totalCorrect + totalWrong;
+  const acc = totalAttempts > 0 ? Math.round(totalCorrect / totalAttempts * 100) : 0;
+  document.getElementById('weak-stats-row').innerHTML =
+    '<div class="weak-stat-card"><div class="weak-stat-num">' + totalAttempts + '</div><div class="weak-stat-label">總作答次數</div></div>' +
+    '<div class="weak-stat-card"><div class="weak-stat-num">' + acc + '%</div><div class="weak-stat-label">整體答對率</div></div>' +
+    '<div class="weak-stat-card"><div class="weak-stat-num">' + list.length + '</div><div class="weak-stat-label">待加強題數</div></div>';
+  const listEl = document.getElementById('weak-list');
+  listEl.innerHTML = '';
+  if (list.length === 0) {
+    listEl.innerHTML = '<div class="weak-empty">目前沒有答錯的題目，保持下去！</div>';
+  } else {
+    list.forEach(s => {
+      const item = document.createElement('div'); item.className = 'weak-item';
+      const mastered = s.lastResult === 'correct';
+      item.innerHTML = '<div class="weak-item-top"><span class="weak-item-loc">' + s.week + ' · ' + s.day + '</span><span class="weak-item-badge' + (mastered ? ' mastered' : '') + '">' + (mastered ? '✅ 已答對' : '❌ 答錯 ' + s.wrong + ' 次') + '</span></div><div class="weak-item-q">' + s.qText + '</div>';
+      item.addEventListener('click', () => jumpToListeningQuestion(s.week, s.day, s.qIndex));
+      listEl.appendChild(item);
+    });
+  }
+  document.getElementById('weak-modal-overlay').classList.add('show');
+}
+function closeWeakModal() { document.getElementById('weak-modal-overlay').classList.remove('show'); }
+function jumpToListeningQuestion(week, day, qIndex) {
+  closeWeakModal();
+  const tabBtn = document.querySelector('.main-tab[onclick*="\'listening\'"]');
+  if (tabBtn) showPage('listening', tabBtn);
+  const sb = document.getElementById('listen-sidebar');
+  let targetDayEl = null;
+  sb.querySelectorAll('.sb-week').forEach(wEl => {
+    if (wEl.querySelector('span').textContent === week) {
+      wEl.nextElementSibling.querySelectorAll('.sb-day').forEach(dEl => {
+        if (dEl.textContent === day) targetDayEl = dEl;
+      });
+    }
+  });
+  if (targetDayEl) {
+    targetDayEl.click();
+    setTimeout(() => {
+      const box = document.querySelectorAll('#listen-main .quiz-box')[qIndex];
+      if (box) {
+        box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        box.style.outline = '2px solid #ef4444';
+        setTimeout(() => { box.style.outline = ''; }, 2000);
+      }
+    }, 100);
+  }
+}
+
 function renderListening(week, day, data) {
   const main = document.getElementById('listen-main');
   main.innerHTML = '<p class="sec-label">' + week + ' · ' + day + '</p>';
   const key = week + day;
+  if (data.img) {
+    const imgWrap = document.createElement('div'); imgWrap.className = 'listen-photo-wrap';
+    imgWrap.innerHTML = '<img class="listen-photo" src="' + data.img + '" alt="TOEIC Part1 照片描述" loading="lazy">';
+    main.appendChild(imgWrap);
+  }
   const scriptLines = data.script.map(l => '<div><span class="script-speaker">' + l.speaker + '：</span>' + l.text + '</div>').join('');
   const lb = document.createElement('div'); lb.className = 'listen-box';
   lb.innerHTML = '<div class="listen-title">🎧 聽力對話</div><button class="listen-play-btn" id="lplay-btn">▶ 播放對話</button><div class="listen-hint">💡 建議先聽2遍再作答</div><button class="show-script-btn">顯示對話原文</button><div class="script-text">' + scriptLines + '</div>';
@@ -2669,20 +2885,43 @@ function renderListening(week, day, data) {
     const fb = document.createElement('div'); fb.className = 'quiz-feedback';
     box.innerHTML = '<div class="quiz-num">問題 ' + (qi+1) + '</div><div class="quiz-q">' + q.q + '</div>';
     const opts = document.createElement('div'); opts.className = 'options';
+    const aKey = key + '-' + qi;
+    const optBtns = [];
+
+    function markOptions(oi) {
+      optBtns.forEach((b, i) => {
+        b.disabled = true; b.classList.remove('correct', 'wrong');
+        if (i === q.ans) b.classList.add('correct'); else if (i === oi) b.classList.add('wrong');
+      });
+    }
+    function showFeedback(oi) {
+      fb.className = 'quiz-feedback show ' + (oi === q.ans ? 'ok' : 'bad');
+      fb.innerHTML = (oi === q.ans ? '✅ 答對了！<br><br>' : '❌ 答錯了。<br><br>') + q.exp.replace(/\n/g, '<br>') +
+        '<br><br><button class="show-script-btn retry-btn">🔄 重新測驗這一題</button>';
+      fb.querySelector('.retry-btn').addEventListener('click', () => {
+        delete listenAnswers[aKey]; saveListenAnswers();
+        optBtns.forEach(b => { b.disabled = false; b.classList.remove('correct', 'wrong'); });
+        fb.classList.remove('show', 'ok', 'bad'); fb.innerHTML = '';
+      });
+    }
+    function answerQuestion(oi) {
+      listenAnswers[aKey] = oi; saveListenAnswers();
+      if (!listenStats[aKey]) listenStats[aKey] = { week, day, qIndex: qi, qText: q.q, wrong: 0, correct: 0 };
+      if (oi === q.ans) listenStats[aKey].correct++; else listenStats[aKey].wrong++;
+      listenStats[aKey].lastResult = oi === q.ans ? 'correct' : 'wrong';
+      saveListenStats();
+      markOptions(oi); showFeedback(oi); refreshWeakBadge();
+    }
     q.opts.forEach((o, oi) => {
       const btn = document.createElement('button'); btn.className = 'opt'; btn.textContent = o;
-      const aKey = key + '-' + qi;
-      if (listenAnswers[aKey] !== undefined) { btn.disabled = true; if (oi === q.ans) btn.classList.add('correct'); else if (oi === listenAnswers[aKey]) btn.classList.add('wrong'); }
+      optBtns.push(btn);
       btn.addEventListener('click', () => {
         if (listenAnswers[aKey] !== undefined) return;
-        listenAnswers[aKey] = oi;
-        opts.querySelectorAll('.opt').forEach((b, i) => { b.disabled = true; if (i === q.ans) b.classList.add('correct'); else if (i === oi) b.classList.add('wrong'); });
-        fb.className = 'quiz-feedback show ' + (oi === q.ans ? 'ok' : 'bad');
-        fb.innerHTML = (oi === q.ans ? '✅ 答對了！<br><br>' : '❌ 答錯了。<br><br>') + q.exp.replace(/\n/g, '<br>');
+        answerQuestion(oi);
       });
-      if (listenAnswers[aKey] !== undefined) { fb.className = 'quiz-feedback show ' + (listenAnswers[aKey] === q.ans ? 'ok' : 'bad'); fb.innerHTML = (listenAnswers[aKey] === q.ans ? '✅ 答對了！<br><br>' : '❌ 答錯了。<br><br>') + q.exp.replace(/\n/g, '<br>'); }
       opts.appendChild(btn);
     });
+    if (listenAnswers[aKey] !== undefined) { markOptions(listenAnswers[aKey]); showFeedback(listenAnswers[aKey]); }
     box.appendChild(opts); box.appendChild(fb); main.appendChild(box);
   });
 }
@@ -2842,12 +3081,16 @@ buildSidebar('vocab-sidebar',   vocabData,    renderVocab);
 buildSidebar('listen-sidebar',  listeningData, renderListening);
 buildSidebar('grammar-sidebar', grammarData,   renderGrammar);
 buildSidebar('reading-sidebar', readingData,   renderReading);
+refreshWeakBadge();
 startSilentAudioStream();
 
 window.addEventListener('scroll', () => {
   const btn = document.getElementById('back-to-top');
   if (window.scrollY > 300) btn.classList.add('show');
   else btn.classList.remove('show');
+});
+document.getElementById('weak-modal-overlay').addEventListener('click', (e) => {
+  if (e.target.id === 'weak-modal-overlay') closeWeakModal();
 });
 </script>
 </body>
